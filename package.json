@@ -17,8 +17,9 @@
   "homepage": "https://github.com/Ankush-verma-Source/Fullstack_Projects#readme",
   "description": "",
   "dependencies": {
-    "dotenv": "^17.0.1",
+    "dotenv": "^16.6.1",
     "ejs": "^3.1.10",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "multer": "^2.0.1"
   }
 }

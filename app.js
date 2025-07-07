@@ -51,18 +51,28 @@ async function main(input_text,num_questions) {
                         - Four answer options (labeled A, B, C, D)
                         - The correct answer clearly indicated
                         Format:
-                        ## MCQ
-                        Question: [question]
-                        A) [option A]
-                        B) [option B]
-                        C) [option C]
-                        D) [option D]
-                        Correct Answer: [correct option]
+                        Return the MCQs as a JSON array of objects, where each object has:
+                        - "question": the question text
+                        - "options": an array of four options (A, B, C, D)
+                        - "correct": the correct option letter ("A", "B", "C", or "D")
+
+                        Example:
+                        [
+                        {
+                            "question": "What is the capital of France?",
+                            "options": ["Paris", "London", "Berlin", "Madrid"],
+                            "correct": "Paris"
+                        },
+                        ...
+                        ]
+                        NOTE: "Return without any code block or explanation."
+
+                 
                 `,
     });
-    // console.log(response.text);
     return response.text
 }
+
 
 
 // Routing :
@@ -111,12 +121,12 @@ app.get("/demo" ,(req,res)=>{
 
 app.post("/results",async (req,res)=>{
         let response = req.body.query;
-        // console.log(response);
 
-        
 
-        let result = await main(response,2);
-        res.render("demo.ejs",{result});
+        let data = await main(response,1);
+        const mcqs = JSON.parse(data);
+        console.log(mcqs);
+        res.render("demo.ejs",{mcqs});
 
 });
 

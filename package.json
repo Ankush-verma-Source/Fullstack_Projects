@@ -1,0 +1,22 @@
+{
+  "name": "my_project",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ankush-verma-Source/Fullstack_Projects.git"
+  },
+  "author": "Ankush Verma",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ankush-verma-Source/Fullstack_Projects/issues"
+  },
+  "homepage": "https://github.com/Ankush-verma-Source/Fullstack_Projects#readme",
+  "description": "",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}

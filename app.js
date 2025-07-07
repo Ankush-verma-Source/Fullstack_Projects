@@ -13,7 +13,6 @@ const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
 // const fs = require('fs');
-// const path = require('path');
 // const { GoogleAuth } = require('google-auth-library');
 // const { PDFDocument } = require('pdf-lib');
 // const { generateMCQs } = require('./mcqGenerator'); // Assume this is a separate module for MCQ generation
@@ -29,14 +28,41 @@ const upload = multer({ dest: 'uploads/' });
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"views"));
 app.use(express.static(path.join(__dirname,"public")));
-
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 // new add for : upload folder
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
 
+// gemini api setup :
+let  { GoogleGenAI } = require("@google/genai");
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
 
-
+async function main(input_text,num_questions) {
+    const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: `
+                        You are an AI assistant helping the user generate multiple-choice questions (MCQs) based on the following text:
+                        '${input_text}'
+                        Please generate ${num_questions} MCQs from the text. Each question should have:
+                        - A clear question
+                        - Four answer options (labeled A, B, C, D)
+                        - The correct answer clearly indicated
+                        Format:
+                        ## MCQ
+                        Question: [question]
+                        A) [option A]
+                        B) [option B]
+                        C) [option C]
+                        D) [option D]
+                        Correct Answer: [correct option]
+                `,
+    });
+    // console.log(response.text);
+    return response.text
+}
 
 
 // Routing :
@@ -76,6 +102,23 @@ app.post('/generate', upload.single('file'), async (req, res) => {
     res.redirect("/home");
 });
 
+
+
+// demo : 
+app.get("/demo" ,(req,res)=>{
+    res.render("demo.ejs");
+});
+
+app.post("/results",async (req,res)=>{
+        let response = req.body.query;
+        // console.log(response);
+
+        
+
+        let result = await main(response,2);
+        res.render("demo.ejs",{result});
+
+});
 
 
 

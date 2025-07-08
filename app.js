@@ -8,6 +8,11 @@ const app = express();
 const port=process.env.PORT;
 const path = require('path');
 const mongoose = require("mongoose");
+const session = require("express-session");
+const flash = require("connect-flash");
+const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
+const User = require("./models/User.js");
 // const ejsMate = require("ejs-mate");
 
 const multer = require('multer');
@@ -22,7 +27,17 @@ app.use(express.json());
 // new add for : upload folder
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // app.engine("ejs", ejsMate);
-
+app.use(session({
+    secret: process.env.SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie : {
+        expires : 60*60*24,
+        maxAge : 60*60*24,
+        httpOnly : true,
+    }
+}));
+app.use(flash());
 
 async function main(){
     await mongoose.connect('mongodb://127.0.0.1:27017/questiva');
@@ -35,6 +50,21 @@ main()
     console.log("error occur :",err);
 });
 
+
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+
+
+app.use((req,res,next)=>{
+    res.locals.error = req.flash("error"),
+    res.locals.success = req.flash("success")
+    next();
+});
 
 // gemini api setup :
 let  { GoogleGenAI } = require("@google/genai");
@@ -97,10 +127,45 @@ app.post('/generate', upload.single('file'), async (req, res) => {
 app.get("/signup" ,(req,res)=>{
     res.render("signup.ejs");
 });
+app.post("/signup" ,async(req,res)=>{
+    try {
+        let user = req.body.user;
+        let userInfo = {
+            username : user.username,
+            name : user.name,
+            email : user.email
+        }
+        let newUser = await User.register(userInfo,user.password);
+        req.login(newUser, (err) => {
+            if (err) {
+                console.log(err); // error handling
+            }
+
+            console.log(req.user);
+            res.redirect("/login");
+            
+        })
+
+        
+
+    }catch(err){
+        console.log(err); // flash message
+    }
+    
+    
+});
 
 app.get("/login" ,(req,res)=>{
+    // console.log(req.user);
     res.render("login.ejs");
+});
 
+app.post("/login" ,passport.authenticate("local",{failureRedirect:"/login",failureFlash : true}) ,(req,res)=>{
+    console.log(req.user);
+    if(res.locals.error){
+        console.log("wrong");
+    }; 
+    res.redirect("/home");
 });
 
 

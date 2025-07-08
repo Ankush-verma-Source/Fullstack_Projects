@@ -7,22 +7,11 @@ const express = require('express');
 const app = express();
 const port=process.env.PORT;
 const path = require('path');
-
+const mongoose = require("mongoose");
+// const ejsMate = require("ejs-mate");
 
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
-
-// const fs = require('fs');
-// const { GoogleAuth } = require('google-auth-library');
-// const { PDFDocument } = require('pdf-lib');
-// const { generateMCQs } = require('./mcqGenerator'); // Assume this is a separate module for MCQ generation
-
-// app.use(express.urlencoded({ extended: true }));
-
-
-// Ensure upload and results directories exist
-// if (!fs.existsSync('uploads')) fs.mkdirSync('uploads');
-// if (!fs.existsSync('results')) fs.mkdirSync('results');
 
 
 app.set("view engine","ejs");
@@ -32,7 +21,19 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // new add for : upload folder
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// app.engine("ejs", ejsMate);
 
+
+async function main(){
+    await mongoose.connect('mongodb://127.0.0.1:27017/questiva');
+}
+main()
+.then(()=>{
+    console.log("Database connected");
+})
+.catch((err) =>{
+    console.log("error occur :",err);
+});
 
 
 // gemini api setup :
@@ -40,7 +41,7 @@ let  { GoogleGenAI } = require("@google/genai");
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
 
-async function main(input_text,num_questions) {
+async function geminiAI(input_text,num_questions) {
     const response = await ai.models.generateContent({
         model: "gemini-2.5-flash",
         contents: `
@@ -89,27 +90,17 @@ app.post('/generate', upload.single('file'), async (req, res) => {
 
     // const filePath = path.join(__dirname, req.file.path);
     console.log(req.file.path);
-    // const text = await extractTextFromFile(filePath); // Implement this function to extract text from PDF, DOCX, or TXT
 
-    // if (text) {
-    //     const numQuestions = parseInt(req.body.num_questions);
-    //     const mcqs = await generateMCQs(text, numQuestions); // Implement this function to generate MCQs
-
-    //     if (!mcqs) {
-    //         return res.send("Failed to generate MCQs.");
-    //     }
-
-    //     const txtFilename = `generated_mcqs_${path.basename(req.file.originalname, path.extname(req.file.originalname))}.txt`;
-    //     const pdfFilename = `generated_mcqs_${path.basename(req.file.originalname, path.extname(req.file.originalname))}.pdf`;
-
-    //     fs.writeFileSync(path.join('results', txtFilename), mcqs);
-    //     await createPDF(mcqs, path.join('results', pdfFilename)); // Implement this function to create a PDF
-
-    //     res.render('results', { mcqs, txtFilename, pdfFilename });
-    // } else {
-    //     res.send("Failed to extract text from the uploaded file.");
-    // }
     res.redirect("/home");
+});
+
+app.get("/signup" ,(req,res)=>{
+    res.render("signup.ejs");
+});
+
+app.get("/login" ,(req,res)=>{
+    res.render("login.ejs");
+
 });
 
 
@@ -123,21 +114,13 @@ app.post("/results",async (req,res)=>{
         let response = req.body.query;
 
 
-        let data = await main(response,1);
+        let data = await geminiAI(response,1);
         const mcqs = JSON.parse(data);
         console.log(mcqs);
         res.render("demo.ejs",{mcqs});
 
 });
 
-app.get("/signup" ,(req,res)=>{
-    res.render("signup.ejs");
-});
-
-app.get("/login" ,(req,res)=>{
-    res.render("login.ejs");
-
-});
 
 
 

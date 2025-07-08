@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet">
+    <style>
+        body {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    font-family: 'Montserrat', sans-serif;
+    background: #f2f4ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.main-container {
+    display: flex;
+    width: 95vw;
+    max-width: 800px;
+    min-height: 500px;
+    border-radius: 32px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+    overflow: hidden;
+    background: transparent;
+    box-sizing: border-box;
+}
+
+.form-container {
+    box-sizing: border-box;
+    width: 55%;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 48px 40px 32px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.side-purple {
+    width: 45%;
+    background: linear-gradient(135deg, #6d5dfc 0%, #8f6ed5 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+h2 {
+    margin: 0 0 8px 0;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #3a2d7d;
+}
+
+p {
+    color: #7a7a7a;
+    margin-bottom: 32px;
+}
+
+.input-group {
+    margin-bottom: 22px;
+    position: relative;
+}
+
+.input-group input {
+    width: 80%;
+    padding: 14px 44px 14px 44px;
+    border-radius: 12px;
+    border: none;
+    background: #f5f7ff;
+    /* background-color: #6d5dfc; */
+    font-size: 1rem;
+    color: #3a2d7d;
+    box-shadow: 0 2px 8px rgba(109, 93, 252, 0.04);
+    outline: none;
+}
+
+.input-group svg {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    fill: #6d5dfc;
+}
+
+.checkbox-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.checkbox-row label {
+    font-size: 0.95rem;
+    color: #6d5dfc;
+    cursor: pointer;
+}
+
+.checkbox-row a {
+    color: #8f6ed5;
+    text-decoration: none;
+    font-size: 0.95rem;
+}
+
+.signup-btn {
+    width: 100%;
+    padding: 14px 0;
+    background: linear-gradient(90deg, #6d5dfc 0%, #8f6ed5 100%);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 18px;
+    transition: background 0.2s;
+}
+
+.signup-btn:hover {
+    background: linear-gradient(90deg, #8f6ed5 0%, #6d5dfc 100%);
+}
+
+.bottom-text {
+    text-align: center;
+    color: #7a7a7a;
+    font-size: 0.98rem;
+}
+
+.bottom-text a {
+    color: #6d5dfc;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* Responsive Styles */
+@media (max-width: 1200px) {
+    .main-container {
+        flex-direction: column;
+        width: 98vw;
+        
+    }
+    .side-purple {
+        order : 0;
+        min-height: 100px;
+        width:100%;
+    }
+    .form-container {
+        order:1;
+        width:100%;
+         
+    }
+}
+
+@media (max-width: 900px) {
+    .main-container {
+        flex-direction: column;
+        width: 98vw;
+        border-radius:32px;
+    }
+    .form-container, .side-purple {
+        width: 100%;
+        border-radius: 0;
+    }
+    .form-container {
+        width:100%;
+        padding: 32px 8vw 24px 8vw;
+        min-height: unset;
+        justify-content: flex-start;
+    }
+    .side-purple {
+        height: 120px;
+        min-height: 80px;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+@media (max-width: 600px) {
+    .form-container {
+        padding: 20px 4vw 16px 4vw;
+    }
+    h2 {
+        font-size: 1.3rem;
+    }
+    .input-group input {
+        font-size: 1rem;
+        padding: 12px 40px 12px 40px;
+        width: 80%;
+    }
+    .signin-btn {
+        font-size: 1rem;
+        padding: 12px 0;
+    }
+}
+
+@media (max-width: 400px) {
+    h2 {
+        font-size: 1.1rem;
+    }
+    .input-group input {
+        font-size: 0.95rem;
+        padding: 10px 30px 10px 40px;
+        width: 80%;
+    }
+    .signin-btn {
+        font-size: 0.9rem;
+        padding: 10px 0;
+    }
+    .form-container {
+        padding: 12px 2vw 8px 2vw;
+    }
+}
+
+/* Remove extra vertical space on mobile */
+/* @media (max-width: 900px) {
+    body {
+        align-items: center;
+        justify-content: center;
+    }
+    .main-container {
+        margin: 0;
+    }
+} */
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="form-container">
+            <h2>Sign Up!</h2>
+            <p>Create your account</p>
+            <form action="/signup" method="POST">
+                <div class="input-group">
+                    <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 8 1.34 8 4v2H4v-2c0-2.66 5.3-4 8-4zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg>
+                    <input type="text" placeholder="Full Name" required>
+                </div>
+                <div class="input-group">
+                    <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                    <input type="email" placeholder="E-mail" required>
+                </div>
+                <div class="input-group">
+                    <svg viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 0 2-2v-2a2 2 0 0 0-4 0v2a2 2 0 0 0 2 2zm6-6V9a6 6 0 0 0-12 0v2a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2zm-8-2a4 4 0 0 1 8 0v2H6V9z"/></svg>
+                    <input type="password" placeholder="Password" required>
+                </div>
+                <div class="checkbox-row">
+                    <label>
+                        <input type="checkbox" required style="accent-color:#6d5dfc; margin-right:6px;">
+                        I agree to the <a href="#">Terms</a>
+                    </label>
+                </div>
+                <button class="signup-btn" type="submit">SIGN UP</button>
+            </form>
+            <div class="bottom-text">
+                Already have an account? <a href="/login">Sign In</a>
+            </div>
+        </div>
+        <div class="side-purple">
+            <!-- You can add an illustration or logo here if you want -->
+        </div>
+    </div>
+</body>
+</html>

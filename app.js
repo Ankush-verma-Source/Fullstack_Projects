@@ -15,7 +15,7 @@ const LocalStrategy = require("passport-local").Strategy;
 const User = require("./models/User.js");
 const ejsMate = require("ejs-mate");
 const ExpressError = require('./util/expressError.js');
-
+const wrapAsync = require('./util/wrapAsync.js');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
@@ -115,7 +115,7 @@ app.get('/home', (req, res) => {
 });
 
 
-app.post('/generate', upload.single('file'), async (req, res) => {
+app.post('/generate', upload.single('file'), wrapAsync(async (req, res) => {
     if (!req.file) {
         return res.send("No file uploaded.");
     }
@@ -124,12 +124,12 @@ app.post('/generate', upload.single('file'), async (req, res) => {
     console.log(req.file.path);
 
     res.redirect("/home");
-});
+}));
 
 app.get("/signup" ,(req,res)=>{
     res.render("signup.ejs");
 });
-app.post("/signup" ,async(req,res)=>{
+app.post("/signup" ,wrapAsync(async(req,res)=>{
     try {
         let user = req.body.user;
         let userInfo = {
@@ -155,18 +155,18 @@ app.post("/signup" ,async(req,res)=>{
     }
     
     
-});
+}));
 
 app.get("/login" ,(req,res)=>{
     res.render("login.ejs");
 });
 
-app.post("/login" ,passport.authenticate("local",{failureRedirect:"/login",failureFlash : true}) ,async (req,res)=>{
+app.post("/login" ,passport.authenticate("local",{failureRedirect:"/login",failureFlash : true}) ,wrapAsync(async (req,res)=>{
     // console.log(req.user);
     req.flash("success", "Login successful!");
     res.redirect("/home");
     
-});
+}));
 
 
 
@@ -175,7 +175,7 @@ app.get("/demo" ,(req,res)=>{
     res.render("demo.ejs");
 });
 
-app.post("/results",async (req,res)=>{
+app.post("/results",wrapAsync(async (req,res)=>{
         let response = req.body.query;
 
 
@@ -184,7 +184,7 @@ app.post("/results",async (req,res)=>{
         console.log(mcqs);
         res.render("demo.ejs",{mcqs});
 
-});
+}));
 
 
 

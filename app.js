@@ -13,7 +13,8 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const User = require("./models/User.js");
-// const ejsMate = require("ejs-mate");
+const ejsMate = require("ejs-mate");
+const ExpressError = require('./util/expressError.js');
 
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
@@ -26,14 +27,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // new add for : upload folder
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-// app.engine("ejs", ejsMate);
+app.engine("ejs", ejsMate);
 app.use(session({
     secret: process.env.SECRET,
     resave: false,
     saveUninitialized: true,
     cookie : {
-        expires : 60*60*24,
-        maxAge : 60*60*24,
+        expires :Date.now() + 1000 * 60 * 60 * 24,
+        maxAge : 1000 * 60 * 60 * 24,
         httpOnly : true,
     }
 }));
@@ -61,8 +62,9 @@ passport.deserializeUser(User.deserializeUser());
 
 
 app.use((req,res,next)=>{
-    res.locals.error = req.flash("error"),
-    res.locals.success = req.flash("success")
+    res.locals.error = req.flash("error");
+    res.locals.success = req.flash("success");
+    res.locals.currentUser = req.user;
     next();
 });
 
@@ -134,38 +136,36 @@ app.post("/signup" ,async(req,res)=>{
             username : user.username,
             name : user.name,
             email : user.email
-        }
+        };
         let newUser = await User.register(userInfo,user.password);
         req.login(newUser, (err) => {
             if (err) {
-                console.log(err); // error handling
+                next(err); // error handling
+                return;
             }
 
-            console.log(req.user);
-            res.redirect("/login");
+            req.flash("success","login successfully");
+            res.redirect("/home");
             
-        })
-
-        
-
+        });
     }catch(err){
-        console.log(err); // flash message
+        // console.log(err.message);
+        req.flash("error",err.message);
+        res.redirect("/signup");
     }
     
     
 });
 
 app.get("/login" ,(req,res)=>{
-    // console.log(req.user);
     res.render("login.ejs");
 });
 
-app.post("/login" ,passport.authenticate("local",{failureRedirect:"/login",failureFlash : true}) ,(req,res)=>{
-    console.log(req.user);
-    if(res.locals.error){
-        console.log("wrong");
-    }; 
+app.post("/login" ,passport.authenticate("local",{failureRedirect:"/login",failureFlash : true}) ,async (req,res)=>{
+    // console.log(req.user);
+    req.flash("success", "Login successful!");
     res.redirect("/home");
+    
 });
 
 
@@ -186,6 +186,19 @@ app.post("/results",async (req,res)=>{
 
 });
 
+
+
+app.all('/{*any}', (req,res,next)=>{
+    next( new ExpressError(404 , "Page Not Found"));
+});
+
+
+app.use((err,req ,res ,next)=>{
+    // console.log(err);
+    
+    let { status=500 , message="some thing went wrong"} = err;
+    res.status(status).render("error.ejs", {message});
+});
 
 
 

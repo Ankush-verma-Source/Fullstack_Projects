@@ -1,0 +1,187 @@
+     body {
+        margin: 0;
+        padding: 0;
+        padding: 5rem 0 0 0;
+        min-height: 100vh;
+        font-family: "Montserrat", sans-serif;
+        background: #f2f4ff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .main-container {
+        display: flex;
+        width: 95vw;
+        max-width: 800px;
+        min-height: 500px;
+        border-radius: 32px;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+        overflow: hidden;
+        background: transparent;
+        box-sizing: border-box;
+      }
+
+      .form-container {
+        width: 60%;
+        /* height: 100%; */
+        background: rgba(255, 255, 255, 0.95);
+        padding: 48px 40px 32px 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .side-purple {
+        width: 40%;
+        background: linear-gradient(135deg, #6d5dfc 0%, #8f6ed5 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      h2 {
+        margin: 0 0 8px 0;
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: #3a2d7d;
+      }
+
+      p {
+        color: #7a7a7a;
+        margin-bottom: 32px;
+      }
+
+      .input-group {
+        margin-bottom: 22px;
+        position: relative;
+      }
+
+      .input-group input {
+        width: 100%;
+        padding: 14px 44px 14px 44px;
+        border-radius: 12px;
+        border: none;
+        background: #f5f7ff;
+        font-size: 1rem;
+        color: #3a2d7d;
+        box-shadow: 0 2px 8px rgba(109, 93, 252, 0.04);
+        outline: none;
+      }
+
+      .input-group svg {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 20px;
+        height: 20px;
+        fill: #6d5dfc;
+      }
+
+      .signin-btn {
+        width: 100%;
+        padding: 14px 0;
+        background: linear-gradient(90deg, #6d5dfc 0%, #8f6ed5 100%);
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        cursor: pointer;
+        margin-bottom: 18px;
+        transition: background 0.2s;
+      }
+
+      .signin-btn:hover {
+        background: linear-gradient(90deg, #8f6ed5 0%, #6d5dfc 100%);
+      }
+
+      .bottom-text {
+        text-align: center;
+        color: #7a7a7a;
+        font-size: 0.98rem;
+      }
+
+      .bottom-text a {
+        color: #6d5dfc;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000; /* ensure it stays above other content */
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* optional for nice shadow */
+      }
+  
+      .side-purple {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        text-align: center;
+      }
+            /* Responsive Styles */
+      @media (max-width: 1200px) {
+        .main-container {
+          flex-direction: column;
+          width: 98vw;
+          margin-top:2rem;
+        }
+        .side-purple {
+          order: 0;
+          height: 20rem;
+          width: 100%;
+        }
+        .form-container {
+          order: 1;
+          width: 100%;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .form-container {
+          padding: 32px 8vw 24px 8vw;
+        }
+        .side-purple {
+          height: 20rem;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .form-container {
+          padding: 32px 4vw 55px 4vw;
+        }
+        h2 {
+          font-size: 1.5rem;
+        }
+        .input-group input {
+          font-size: 0.98rem;
+          padding: 12px 40px 12px 40px;
+        }
+        .signin-btn {
+          font-size: 1rem;
+          padding: 12px 0;
+        }
+      }
+
+      @media (max-width: 400px) {
+        h2 {
+          font-size: 1.2rem;
+        }
+        .input-group input {
+          width: 100%;
+          padding: 10px 30px 10px 40px;
+        }
+        .signin-btn {
+          font-size: 0.9rem;
+          padding: 10px 0;
+        }
+      }

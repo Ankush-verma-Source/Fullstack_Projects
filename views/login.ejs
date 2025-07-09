@@ -5,181 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign In</title>
     <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
       href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap"
       rel="stylesheet"
     />
-    <style>
-      body {
-        margin: 0;
-        padding: 0;
-        min-height: 100vh;
-        font-family: "Montserrat", sans-serif;
-        background: #f2f4ff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .main-container {
-        display: flex;
-        width: 95vw;
-        max-width: 800px;
-        min-height: 500px;
-        border-radius: 32px;
-        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
-        overflow: hidden;
-        background: transparent;
-        box-sizing: border-box;
-      }
-
-      .form-container {
-        width: 55%;
-        background: rgba(255, 255, 255, 0.95);
-        padding: 48px 40px 32px 40px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-      }
-
-      .side-purple {
-        width: 45%;
-        background: linear-gradient(135deg, #6d5dfc 0%, #8f6ed5 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      h2 {
-        margin: 0 0 8px 0;
-        font-size: 2.2rem;
-        font-weight: 700;
-        color: #3a2d7d;
-      }
-
-      p {
-        color: #7a7a7a;
-        margin-bottom: 32px;
-      }
-
-      .input-group {
-        margin-bottom: 22px;
-        position: relative;
-      }
-
-      .input-group input {
-        width: 80%;
-        padding: 14px 44px 14px 44px;
-        border-radius: 12px;
-        border: none;
-        background: #f5f7ff;
-        font-size: 1rem;
-        color: #3a2d7d;
-        box-shadow: 0 2px 8px rgba(109, 93, 252, 0.04);
-        outline: none;
-      }
-
-      .input-group svg {
-        position: absolute;
-        left: 14px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 20px;
-        height: 20px;
-        fill: #6d5dfc;
-      }
-
-      .signin-btn {
-        width: 100%;
-        padding: 14px 0;
-        background: linear-gradient(90deg, #6d5dfc 0%, #8f6ed5 100%);
-        color: #fff;
-        border: none;
-        border-radius: 12px;
-        font-size: 1.1rem;
-        font-weight: 700;
-        cursor: pointer;
-        margin-bottom: 18px;
-        transition: background 0.2s;
-      }
-
-      .signin-btn:hover {
-        background: linear-gradient(90deg, #8f6ed5 0%, #6d5dfc 100%);
-      }
-
-      .bottom-text {
-        text-align: center;
-        color: #7a7a7a;
-        font-size: 0.98rem;
-      }
-
-      .bottom-text a {
-        color: #6d5dfc;
-        text-decoration: none;
-        font-weight: 600;
-      }
-
-      /* Responsive Styles */
-      @media (max-width: 1200px) {
-        .main-container {
-          flex-direction: column;
-          width: 98vw;
-        }
-        .side-purple {
-          order: 0;
-          min-height: 100px;
-          width: 100%;
-        }
-        .form-container {
-          order: 1;
-          width: 90%;
-        }
-      }
-
-      @media (max-width: 900px) {
-        .form-container {
-          padding: 32px 8vw 24px 8vw;
-        }
-        .side-purple {
-          min-height: 100px;
-          height: 100px;
-        }
-      }
-
-      @media (max-width: 600px) {
-        .form-container {
-          padding: 24px 4vw 16px 4vw;
-        }
-        h2 {
-          font-size: 1.5rem;
-        }
-        .input-group input {
-          font-size: 0.98rem;
-          padding: 12px 40px 12px 40px;
-        }
-        .signin-btn {
-          font-size: 1rem;
-          padding: 12px 0;
-        }
-      }
-
-      @media (max-width: 400px) {
-        h2 {
-          font-size: 1.2rem;
-        }
-        .input-group input {
-          width: 90%;
-          padding: 10px 30px 10px 40px;
-        }
-        .signin-btn {
-          font-size: 0.9rem;
-          padding: 10px 0;
-        }
-      }
-    </style>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/login.css" />
   </head>
   <body>
+    <%- include('includes/header') %> <%- include('includes/flash') %>
     <div class="main-container">
-      <div class="form-container">
+      <div class="form-container" data-aos="fade-up" data-aos-duration="1000">
         <h2>Sign In!</h2>
         <p>Welcome back! Please log in to your account.</p>
         <form action="/login" method="POST">
@@ -190,7 +39,12 @@
               />
             </svg>
 
-            <input type="text" placeholder="Username" required />
+            <input
+              type="text"
+              placeholder="Username"
+              name="username"
+              required
+            />
           </div>
           <div class="input-group">
             <svg viewBox="0 0 24 24">
@@ -198,7 +52,12 @@
                 d="M12 17a2 2 0 0 0 2-2v-2a2 2 0 0 0-4 0v2a2 2 0 0 0 2 2zm6-6V9a6 6 0 0 0-12 0v2a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2zm-8-2a4 4 0 0 1 8 0v2H6V9z"
               />
             </svg>
-            <input type="password" placeholder="Password" required />
+            <input
+              type="password"
+              placeholder="Password"
+              name="password"
+              required
+            />
           </div>
           <button class="signin-btn" type="submit">SIGN IN</button>
         </form>
@@ -206,9 +65,31 @@
           Don't have an account? <a href="/signup">Sign Up</a>
         </div>
       </div>
-      <div class="side-purple">
+      <div class="side-purple" data-aos="zoom-in" data-aos-delay="300">
         <!-- You can add an illustration or logo here if you want -->
+        <!-- <img src="/images/login.png" alt="Login Illustration" class="login-illustration" /> -->
+        <lottie-player
+          src="https://assets4.lottiefiles.com/packages/lf20_jcikwtux.json"
+          background="transparent"
+          speed="1"
+          style="width: 300px; height: 300px"
+          loop
+          autoplay
+        ></lottie-player>
       </div>
     </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
+      crossorigin="anonymous"
+    ></script>
+    <script src="/js/script.js"></script>
+
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+      AOS.init();
+    </script>
   </body>
 </html>

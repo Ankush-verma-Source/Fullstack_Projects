@@ -5,8 +5,13 @@
       <!-- <a href="#">Features</a> -->
       <!-- <a href="#">About</a> -->
       <!-- <a href="#">Contact</a> -->
+       <% if(!currentUser) {%>
       <a href="/signup">SignUp</a>
-      <a href="/login">LogIn</a>
+      <a href="/login">Login</a>
+      <% } %>
+      <% if(currentUser) {%>
+       <a href="/logout">Logout</a>
+      <% } %>
     </div>
     <div class="hamburger" onclick="toggleMenu()">&#9776;</div>
   </nav>

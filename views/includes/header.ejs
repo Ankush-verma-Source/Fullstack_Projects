@@ -1,19 +1,18 @@
 <nav class="navbar">
-  <% if(!currentUser) {%>
+  
   <a href="/home" class="logo"
     ><i class="logo-icon fas fa-brain"></i>Questiva</a
   >
-  <%}%> <% if(currentUser) {%>
-  <a href="/user" class="logo"
+  
+  <!-- <a href="/user" class="logo"
     ><i class="logo-icon fas fa-brain"></i>Questiva</a
-  >
-  <%}%>
+  > -->
   <div class="nav-links">
-    <% if(!currentUser) {%>
     <a href="/home">Home</a>
-    <%}%> <% if(currentUser) {%>
-    <a href="/user">Home</a>
-    <%}%>
+
+    <% if(currentUser) {%>
+      <a href="/<%= currentUser._id %>/dashboard">Dashboard</a>
+    <% } %>
     <!-- <a href="#">Features</a> -->
     <!-- <a href="#">About</a> -->
     <!-- <a href="#">Contact</a> -->

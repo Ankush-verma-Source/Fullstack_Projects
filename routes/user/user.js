@@ -26,7 +26,7 @@ router.post("/signup" ,wrapAsync(async(req,res)=>{
             }
 
             req.flash("success","login successfully");
-            res.redirect("/user");
+            res.redirect("/home");
             
         });
     }catch(err){
@@ -46,7 +46,7 @@ router.post("/login" ,passport.authenticate("local",{failureRedirect:"/login",fa
     // console.log(req.user._id);
     req.flash("success", "Login successful!");
 
-    res.redirect(`/user`);
+    res.redirect(`/home`);
     
 }));
 
@@ -64,7 +64,7 @@ router.get("/logout" , (req,res)=>{
 });
 
 
-router.get("/user" , /*islogin*/ (req,res)=>{
+router.get("/:userId/dashboard" , /*islogin*/ (req,res)=>{
     res.render("dashboard.ejs" , { title: 'Dashboard' });
 });
 

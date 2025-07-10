@@ -112,7 +112,7 @@ async function geminiAI(input_text,num_questions) {
 // Routing :
 
 app.get('/home', (req, res) => {
-    res.render('index.ejs', { title: "QuizCraft - AI MCQ Generator" } );
+    res.render('indi.ejs', { title: "QuizCraft - AI MCQ Generator" } );
 });
 
 

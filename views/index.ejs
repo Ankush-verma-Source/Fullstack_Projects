@@ -1,5 +1,8 @@
 <% layout('layouts/boilerplate') %>
-
+<script>
+   const currUser = <%- JSON.stringify(currentUser || null) %>;
+    // console.log("currUser", currUser);
+</script>
 <link rel="stylesheet" href="/css/index.css">
   <div class="chat-container">
     <div class="chat-header">
@@ -19,7 +22,10 @@
           <label for="file-upload" class="upload-btn">Choose File</label>
           <label for="num_questions">How many questions do you want?</label>
           <input type="number" name="num_questions" min="1" max="30" required>
+    
           <button type="submit" class="submit-btn" id="submit-btn" disabled>Generate MCQs</button>
+       
+          
         </div>
       </form>
     </div>

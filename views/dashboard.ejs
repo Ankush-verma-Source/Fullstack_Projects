@@ -1,142 +1,160 @@
 <% layout('layouts/boilerplate') %>
 
-    <style>
-        body {
-            display: flex;
-            flex-direction:column;
-            /* align-items: none; */
-            width:100%;
-            min-height: 100vh;
-            background-color: #e9efff;
-            transition: background-color 0.3s ease;
-        }
-         .container{
-            max-width:100%;
-            margin:0;
-            padding:0;
-            display: flex;
-            flex-direction:row;
-            min-height: 100vh;
-            background-color: #e9efff; 
-            transition: background-color 0.3s ease;
-        }
-        .sidebar {
-            min-width: 250px;
-            background: linear-gradient(135deg, #5a4fcf 0%, #7a5ed0 100%);
-            color: white;
-            transition: transform 0.3s ease;
-            position: relative; 
-            z-index: 1000; 
-        }
-        .sidebar.hidden {
-            display: none;
-        }
-        .close-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-        .close-btn:hover {
-            color: #ffcccc; 
-        }
-        .sidebar a {
-            color: white;
-            text-decoration: none;
-            padding: 10px 15px; /* Add padding for better click area */
-            border-radius: 5px; /* Rounded corners for links */
-            transition: background-color 0.3s; /* Smooth background transition */
-        }
-        .sidebar a:hover {
-            background-color: rgba(255, 255, 255, 0.2); /* Light hover effect */
-        }
-        .content {
-            width:100%;
-            /* max-width:100%; */
-            flex-grow: 2; /*Allow content to grow and fill available space*/
-            padding: 20px;
-            padding-left: 45px; /* Add padding to the left side for space from the sidebar */
-            padding-right:45px;
-        }
-        .card {
-            margin-bottom: 20px;
-            border-radius: 12px; /* Rounded corners */
-            box-shadow: 0 4px 12px rgba(90, 79, 207, 0.2); /* Enhanced shadow */
-            transition: transform 0.3s; /* Smooth transform transition */
-        }
-        .card:hover {
-            transform: translateY(-5px); /* Lift effect on hover */
-        }
-        .card-title {
-            color: #4a3c8c; /* Darker text color for card titles */
-        }
-        .btn-primary {
-            background: linear-gradient(90deg, #5a4fcf 0%, #7a5ed0 100%); /* Button gradient */
-            border: none;
-            transition: background 0.3s; /* Smooth background transition */
-        }
-        .btn-primary:hover {
-            background: linear-gradient(90deg, #7a5ed0 0%, #5a4fcf 100%); /* Button hover gradient */
-        }
-        .reopen-area {
-            position: fixed;
-            top: 50%; /* Center vertically */
-            left: 0; /* Align to the left edge */
-            transform: translateY(-50%); /* Center the area vertically */
-            background: #5a4fcf; /* Area color */
-            color: white;
-            width: 30px; /* Thinner width for the area */
-            height: 80px; /* Slightly reduced height */
-            display: none; /* Initially hidden */
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            transition: background 0.3s; /* Smooth background transition */
-        }
-        .reopen-area:hover {
-            background: #7a5ed0; /* Change color on hover */
-        }
-        .reopen-area i {
-            font-size: 20px; /* Adjust icon size */
-            color: white; /* Ensure icon color is white for visibility */
-        }
-    </style>
-
+<style>
+  body {
+    display: flex;
+    flex-direction: column;
+    /* align-items: none; */
+    width: 100%;
+    min-height: 100vh;
+    background-color: #e9efff;
+    transition: background-color 0.3s ease;
+  }
+  .container {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    min-height: 100vh;
+    background-color: #e9efff;
+    transition: background-color 0.3s ease;
+  }
+  .sidebar {
+    min-width: 250px;
+    background: linear-gradient(135deg, #5a4fcf 0%, #7a5ed0 100%);
+    color: white;
+    transition: transform 0.3s ease;
+    position: relative;
+    z-index: 1000;
+  }
+  .sidebar.hidden {
+    display: none;
+  }
+  .close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+  .close-btn:hover {
+    color: #ffcccc;
+  }
+  .sidebar a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px; /* Add padding for better click area */
+    border-radius: 5px; /* Rounded corners for links */
+    transition: background-color 0.3s; /* Smooth background transition */
+  }
+  .sidebar a:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* Light hover effect */
+  }
+  .content {
+    width: 100%;
+    /* max-width:100%; */
+    flex-grow: 2; /*Allow content to grow and fill available space*/
+    padding: 20px;
+    padding-left: 45px; /* Add padding to the left side for space from the sidebar */
+    padding-right: 45px;
+  }
+  .card {
+    margin-bottom: 20px;
+    border-radius: 12px; /* Rounded corners */
+    box-shadow: 0 4px 12px rgba(90, 79, 207, 0.2); /* Enhanced shadow */
+    transition: transform 0.3s; /* Smooth transform transition */
+  }
+  .card:hover {
+    transform: translateY(-5px); /* Lift effect on hover */
+  }
+  .card-title {
+    color: #4a3c8c; /* Darker text color for card titles */
+  }
+  .btn-primary {
+    background: linear-gradient(
+      90deg,
+      #5a4fcf 0%,
+      #7a5ed0 100%
+    ); /* Button gradient */
+    border: none;
+    transition: background 0.3s; /* Smooth background transition */
+  }
+  .btn-primary:hover {
+    background: linear-gradient(
+      90deg,
+      #7a5ed0 0%,
+      #5a4fcf 100%
+    ); /* Button hover gradient */
+  }
+  .reopen-area {
+    position: fixed;
+    top: 50%; /* Center vertically */
+    left: 0; /* Align to the left edge */
+    transform: translateY(-50%); /* Center the area vertically */
+    background: #5a4fcf; /* Area color */
+    color: white;
+    width: 30px; /* Thinner width for the area */
+    height: 80px; /* Slightly reduced height */
+    display: none; /* Initially hidden */
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background 0.3s; /* Smooth background transition */
+  }
+  .reopen-area:hover {
+    background: #7a5ed0; /* Change color on hover */
+  }
+  .reopen-area i {
+    font-size: 20px; /* Adjust icon size */
+    color: white; /* Ensure icon color is white for visibility */
+  }
+  @media (max-width: 500px) {
+    .sidebar {
+      min-width: 200px;
+    }
+  }
+  @media (max-width: 440px) {
+    .content {
+      position: absolute;
+      z-index: 300;
+    }
+  }
+</style>
 
 <div class="container">
-    <div class="sidebar p-3" id="sidebar">
-        <button class="close-btn" onclick="toggleDashboard()">
-            <i class="fas fa-times"></i>
-        </button>
-        <h2>Dashboard</h2>
-        <ul class="nav flex-column">
-            <li class="nav-item">
+  <div class="sidebar p-3" id="sidebar">
+    <button class="close-btn" onclick="toggleDashboard()">
+      <i class="fas fa-times"></i>
+    </button>
+    <h2>Dashboard</h2>
+    <ul class="nav flex-column">
+      <!-- <li class="nav-item">
                 <a class="nav-link active" href="#">Home</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Profile</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Settings</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Reports</a>
-            </li>
-            <li class="nav-item">
+            </li> -->
+      <li class="nav-item">
+        <a class="nav-link" href="#">Profile</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Settings</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Reports</a>
+      </li>
+      <!-- <li class="nav-item">
                 <a class="nav-link" href="#">Logout</a>
-            </li>
-        </ul>
-    </div>
+            </li> -->
+    </ul>
+  </div>
 
-    <div class="content" id="content">
-        <h1>Welcome to Your Dashboard</h1>
-        <div class="row">
+  <div class="content" id="content">
+    <h1>Welcome to Your Dashboard</h1>
+    <!-- <div class="row">
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-body">
@@ -162,24 +180,23 @@
                     <div class="card-body">
                         <h5 class="card-title">Statistics</h5>
                         <p class="card-text">Here you can display some statistics or charts.</p>
-                        <!-- You can integrate chart libraries like Chart.js or D3.js here -->
+                        
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+        </div> -->
+  </div>
 
-    <div class="reopen-area" id="reopen-area" onclick="toggleDashboard()">
-        <i class="fas fa-arrow-right"></i>
-    </div>
+  <div class="reopen-area" id="reopen-area" onclick="toggleDashboard()">
+    <i class="fas fa-arrow-right"></i>
+  </div>
 </div>
 
-    <script>
-        function toggleDashboard() {
-            const sidebar = document.getElementById('sidebar');
-            const reopenArea = document.getElementById('reopen-area');
-            const isHidden = sidebar.classList.toggle('hidden'); // Toggle the hidden class
-            reopenArea.style.display = isHidden ? 'flex' : 'none'; // Show/hide reopen area
-        }
-    </script>
-
+<script>
+  function toggleDashboard() {
+    const sidebar = document.getElementById("sidebar");
+    const reopenArea = document.getElementById("reopen-area");
+    const isHidden = sidebar.classList.toggle("hidden"); // Toggle the hidden class
+    reopenArea.style.display = isHidden ? "flex" : "none"; // Show/hide reopen area
+  }
+</script>

@@ -1,0 +1,213 @@
+<% layout('layouts/boilerplate') %>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="/css/home.css" />
+
+<div class="app-container">
+  <div class="app-header">
+    <h1>Welcome to Questiva</h1>
+    <p>Your AI-powered learning assistant</p>
+  </div>
+
+  <div class="search-section">
+    <div class="search-container">
+      <i class="fas fa-search"></i>
+      <input
+        type="text"
+        id="tab-search"
+        placeholder="Search all features..."
+        oninput="filterFeatures()"
+      />
+    </div>
+  </div>
+
+  <div class="features-grid" id="features-main">
+    <div class="feature-card" onclick="openTab(event, 'generate')">
+      <div class="feature-icon">
+        <i class="fas fa-question-circle"></i>
+      </div>
+      <div class="feature-title">Generate MCQs</div>
+    </div>
+    <div class="feature-card" onclick="openTab(event, 'flashcards')">
+      <div class="feature-icon">
+        <i class="fas fa-layer-group"></i>
+      </div>
+      <div class="feature-title">Flashcards</div>
+    </div>
+    <div class="feature-card" onclick="openTab(event, 'summaries')">
+      <div class="feature-icon">
+        <i class="fas fa-file-alt"></i>
+      </div>
+      <div class="feature-title">Summary Generator</div>
+    </div>
+    <div class="feature-card" onclick="openTab(event, 'quizzes')">
+      <div class="feature-icon">
+        <i class="fas fa-list-ol"></i>
+      </div>
+      <div class="feature-title">Quiz Maker</div>
+    </div>
+  </div>
+
+  <div class="content-section">
+    <!-- Generate MCQs Tab -->
+    <div id="generate" class="feature-card">
+      <h2 class="text-center">Generate Multiple Choice Questions</h2>
+      <div class="upload-section">
+        <div class="upload-prompt">
+          <i class="fas fa-file-upload"></i>
+          Upload your document to generate MCQs
+        </div>
+
+        <div
+          id="drop-area"
+          class="drop-area"
+          onclick="document.getElementById('file-upload').click()"
+          ondragover="event.preventDefault(); this.classList.add('dragover')"
+          ondragleave="this.classList.remove('dragover')"
+          ondrop="handleFileDrop(event)"
+        >
+          <p id="drop-text">Drag & drop your file here or click to browse</p>
+          <div id="file-details" class="file-info hidden"></div>
+        </div>
+        <input
+          type="file"
+          id="file-upload"
+          class="hidden"
+          accept=".txt,.pdf,.doc,.docx,.md"
+          onchange="handleFileSelect()"
+        />
+
+        <div class="form-group">
+          <label for="question-count">Number of Questions:</label>
+          <input
+            type="number"
+            id="question-count"
+            name="question-count"
+            min="1"
+            max="50"
+            value="5"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="difficulty">Difficulty Level:</label>
+          <select id="difficulty" name="difficulty">
+            <option value="easy">Easy</option>
+            <option value="medium" selected>Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
+        <div class="btnn-group">
+          <button
+            type="button"
+            class="btnn btnn-secondary"
+            onclick="resetForm()"
+          >
+            Reset
+          </button>
+          <button
+            type="button"
+            class="btnn btnn-primary"
+            id="generate-btn"
+            onclick="generateMCQs()"
+          >
+            Generate MCQs
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flashcards Tab (Hidden by default) -->
+    <div id="flashcards" class="feature-card hidden">
+      <h2>Create Flashcards</h2>
+      <div class="upload-section">
+        <div class="upload-prompt">
+          <i class="fas fa-file-upload"></i>
+          Upload your document to create flashcards
+        </div>
+
+        <div class="drop-area">
+          <p>Drag & drop your file here or click to browse</p>
+        </div>
+
+        <div class="form-group">
+          <label for="flashcard-difficulty">Difficulty Level:</label>
+          <select id="flashcard-difficulty" name="flashcard-difficulty">
+            <option value="basic">Basic</option>
+            <option value="intermediate" selected>Intermediate</option>
+            <option value="advanced">Advanced</option>
+          </select>
+        </div>
+
+        <div class="btnn-group">
+          <button type="button" class="btnn btnn-secondary">Reset</button>
+          <button type="button" class="btnn btnn-primary">
+            Create Flashcards
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary Generator Tab (Hidden by default) -->
+    <div id="summaries" class="feature-card hidden">
+      <h2>Generate Document Summary</h2>
+      <div class="upload-section">
+        <div class="upload-prompt">
+          <i class="fas fa-file-upload"></i>
+          Upload your document to generate a summary
+        </div>
+
+        <div class="drop-area">
+          <p>Drag & drop your file here or click to browse</p>
+        </div>
+
+        <div class="form-group">
+          <label for="summary-length">Summary Length:</label>
+          <select id="summary-length" name="summary-length">
+            <option value="short">Short (2-3 paragraphs)</option>
+            <option value="medium" selected>Medium (4-5 paragraphs)</option>
+            <option value="long">Long (6+ paragraphs)</option>
+          </select>
+        </div>
+
+        <div class="btnn-group">
+          <button type="button" class="btnn btnn-secondary">Reset</button>
+          <button type="button" class="btnn btnn-primary">
+            Generate Summary
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quiz Maker Tab (Hidden by default) -->
+    <div id="quizzes" class="feature-card hidden">
+      <h2>Create Custom Quiz</h2>
+      <div class="upload-section">
+        <div class="upload-prompt">
+          <i class="fas fa-file-upload"></i>
+          Upload your document to create a quiz
+        </div>
+
+        <div class="drop-area">
+          <p>Drag & drop your file here or click to browse</p>
+        </div>
+
+        <div class="form-group">
+          <label for="quiz-type">Quiz Type:</label>
+          <select id="quiz-type" name="quiz-type">
+            <option value="multiple-choice">Multiple Choice</option>
+            <option value="true-false">True/False</option>
+            <option value="short-answer">Short Answer</option>
+            <option value="mix" selected>Mix of Types</option>
+          </select>
+        </div>
+
+        <div class="btnn-group">
+          <button type="button" class="btnn btnn-secondary">Reset</button>
+          <button type="button" class="btnn btnn-primary">Create Quiz</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/home.js"></script>

@@ -1,6 +1,6 @@
 <% layout('layouts/boilerplate') %>
 
-<style>
+<!-- <style>
   body {
     display: flex;
     flex-direction: column;
@@ -125,6 +125,145 @@
       z-index: 300;
     }
   }
+</style> -->
+<style>
+   html ,body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width:100%;
+    overflow: hidden; /* Prevent full-page scroll */
+    background-color: #e9efff;
+    transition: background-color 0.3s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .container {
+    max-width:100%;
+    padding:0;
+    display: flex;
+    height: 100vh; /* Full viewport height */
+    overflow: hidden; /* Prevent page scroll */
+    /* width: 100%; */
+  }
+
+  .sidebar {
+    min-width: 250px;
+    height: 100vh; /* Sidebar fixed height */
+    background: linear-gradient(135deg, #5a4fcf 0%, #7a5ed0 100%);
+    color: white;
+    transition: transform 0.3s ease;
+    position: relative;
+    z-index: 1000;
+    overflow-y: auto; /* Optional: scroll sidebar if content overflows */
+  }
+
+  .sidebar.hidden {
+    display: none;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+
+  .close-btn:hover {
+    color: #ffcccc;
+  }
+
+  .sidebar a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    display: block;
+    transition: background-color 0.3s;
+  }
+
+  .sidebar a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .content {
+    flex-grow: 1;
+    overflow-y: auto; /* Enable vertical scroll */
+    height: 100vh;
+    padding: 20px 45px;
+    box-sizing: border-box;
+  }
+
+  .card {
+    margin-bottom: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(90, 79, 207, 0.2);
+    transition: transform 0.3s;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+  }
+
+  .card-title {
+    color: #4a3c8c;
+  }
+
+  .btn-primary {
+    background: linear-gradient(90deg, #5a4fcf 0%, #7a5ed0 100%);
+    border: none;
+    transition: background 0.3s;
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(90deg, #7a5ed0 0%, #5a4fcf 100%);
+  }
+
+  .reopen-area {
+    position: fixed;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    background: #5a4fcf;
+    color: white;
+    width: 30px;
+    height: 80px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background 0.3s;
+    z-index: 2000;
+  }
+
+  .reopen-area:hover {
+    background: #7a5ed0;
+  }
+
+  .reopen-area i {
+    font-size: 20px;
+    color: white;
+  }
+
+  @media (max-width: 500px) {
+    .sidebar {
+      min-width: 200px;
+    }
+  }
+
+  @media (max-width: 440px) {
+    .content {
+      position: absolute;
+      z-index: 300;
+    }
+  }
 </style>
 
 <div class="container">
@@ -154,7 +293,7 @@
 
   <div class="content" id="content">
     <h1>Welcome to Your Dashboard</h1>
-    <!-- <div class="row">
+    <div class="row">
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-body">
@@ -184,7 +323,206 @@
                     </div>
                 </div>
             </div>
-        </div> -->
+        </div>
+
+
+        <!--  -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Card Title 1</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Card Title 2</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Statistics</h5>
+                        <p class="card-text">Here you can display some statistics or charts.</p>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Card Title 1</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Card Title 2</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Statistics</h5>
+                        <p class="card-text">Here you can display some statistics or charts.</p>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Card Title 1</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Card Title 2</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Statistics</h5>
+                        <p class="card-text">Here you can display some statistics or charts.</p>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Card Title 1</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Card Title 2</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Statistics</h5>
+                        <p class="card-text">Here you can display some statistics or charts.</p>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Card Title 1</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Card Title 2</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Statistics</h5>
+                        <p class="card-text">Here you can display some statistics or charts.</p>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Card Title 1</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Card Title 2</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Statistics</h5>
+                        <p class="card-text">Here you can display some statistics or charts.</p>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
   </div>
 
   <div class="reopen-area" id="reopen-area" onclick="toggleDashboard()">

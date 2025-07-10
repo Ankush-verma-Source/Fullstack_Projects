@@ -8,7 +8,7 @@ const User = require("../../models/User.js");
 
 
 router.get("/signup" ,(req,res)=>{
-    res.render("signup.ejs");
+    res.render("signup.ejs", { title: 'SignUp | Questiva ' });
 });
 router.post("/signup" ,wrapAsync(async(req,res)=>{
     try {
@@ -26,7 +26,7 @@ router.post("/signup" ,wrapAsync(async(req,res)=>{
             }
 
             req.flash("success","login successfully");
-            res.redirect("/home");
+            res.redirect("/user");
             
         });
     }catch(err){
@@ -39,13 +39,14 @@ router.post("/signup" ,wrapAsync(async(req,res)=>{
 }));
 
 router.get("/login" ,(req,res)=>{
-    res.render("login.ejs");
+    res.render("login.ejs", { title: 'Login | Questiva' });
 });
 
 router.post("/login" ,passport.authenticate("local",{failureRedirect:"/login",failureFlash : true}) ,wrapAsync(async (req,res)=>{
-    // console.log(req.user);
+    // console.log(req.user._id);
     req.flash("success", "Login successful!");
-    res.redirect("/home");
+
+    res.redirect(`/user`);
     
 }));
 
@@ -60,6 +61,11 @@ router.get("/logout" , (req,res)=>{
         res.redirect("/home");
     });
     
+});
+
+
+router.get("/user" , /*islogin*/ (req,res)=>{
+    res.render("dashboard.ejs" , { title: 'Dashboard' });
 });
 
 

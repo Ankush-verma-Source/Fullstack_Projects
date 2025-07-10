@@ -65,6 +65,7 @@ app.use((req,res,next)=>{
     res.locals.error = req.flash("error");
     res.locals.success = req.flash("success");
     res.locals.currentUser = req.user;
+    res.locals.title = "QuizCraft - AI MCQ Generator";
     next();
 });
 
@@ -111,7 +112,7 @@ async function geminiAI(input_text,num_questions) {
 // Routing :
 
 app.get('/home', (req, res) => {
-    res.render('index.ejs');
+    res.render('index.ejs', { title: "QuizCraft - AI MCQ Generator" } );
 });
 
 

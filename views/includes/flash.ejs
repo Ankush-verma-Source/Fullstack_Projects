@@ -1,17 +1,63 @@
+<style>
+  .flash-container {
+  position: fixed;
+  top: 85px; /* adjust below navbar */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  width: auto;
+  max-width: 90%;
+  min-width: 300px;
+  padding: 0 1rem;
+  pointer-events: none; /* allows clicks to pass through if needed */
+}
+
+.flash-container .alert {
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  border-radius: 6px;
+  pointer-events: auto; /* ensure close button is clickable */
+  animation: slideDownFade 0.5s ease;
+}
+@keyframes slideDownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+</style>
+ <% if (success && success.length) { %>
+<div class="flash-container">
+ 
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <%= success %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+      </div>
+  <% } %>
+
+  <% if (error && error.length) { %>
+    <div class="flash-container">
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <%= error %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    </div>
+  <% } %>
 
 
-<% if (error && error.length) { %>
-  <div class="alert alert-danger alert-dismissible fade show w-50 mx-auto mt-3 text-center" role="alert">
-    <%= error %>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-  </div>
-<% } %>
 
-<% if (success && success.length) { %>
-  <div class="alert alert-success alert-dismissible fade show w-50 mx-auto mt-3 text-center" role="alert">
-    <%= success %>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-  </div>
-<% } %>
-
-
+<script>
+  setTimeout(() => {
+    const alert = document.querySelector('.flash-container .alert');
+    if (alert) {
+      alert.classList.remove('show');
+      alert.classList.add('fade');
+      setTimeout(() => alert.remove(), 300);
+    }
+  }, 4000);
+</script>

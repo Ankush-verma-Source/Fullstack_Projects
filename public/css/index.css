@@ -1,0 +1,148 @@
+
+/* Chat Container */
+.chat-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 3rem auto;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transform: translateY(20px);
+  opacity: 0;
+  animation: fadeInUp 0.5s ease forwards;
+  animation-delay: 0.2s;
+}
+
+/* Chat Header */
+.chat-header {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  padding: 1.5rem;
+  text-align: center;
+  color: white;
+}
+
+.chat-header h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Chat Body */
+.chat-body {
+  padding: 2rem;
+  height: 500px;
+  overflow-y: auto;
+  background: #f9f9f9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+  gap: 1rem;
+}
+
+/* Upload Prompt */
+.upload-prompt {
+  font-size: 1.2rem;
+  color: #666;
+  text-align: center;
+  animation: pulse 1.5s infinite;
+}
+
+/* Button Styles */
+.upload-btn {
+  background: #667eea;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  font-size: 1rem;
+  margin: 1rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.upload-btn:hover {
+  background: #764ba2;
+  transform: scale(1.05);
+}
+
+/* new code Start */
+input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+}
+
+/* new code END */
+.submit-btn {
+  background: #28a745;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  font-size: 1rem;
+  margin: 1rem 0;
+  opacity: 0.5;
+  pointer-events: none;
+  position: relative;
+}
+
+.submit-btn.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Drag and Drop Styles */
+.drop-area {
+  border: 2px dashed #667eea;
+  border-radius: 10px;
+  padding: 2rem;
+  text-align: center;
+  transition: border-color 0.3s;
+}
+
+.drop-area.dragover {
+  border-color: #28a745;
+  background: rgba(40, 167, 69, 0.1);
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .chat-body {
+    height: 550px;
+  }
+}
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+}

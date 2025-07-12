@@ -17,8 +17,10 @@ const ejsMate = require("ejs-mate");
 const ExpressError = require('./util/expressError.js');
 const wrapAsync = require('./util/wrapAsync.js');
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
-
+const { storage } = require('./cloudinaryConfig.js');
+const upload = multer({ storage });
+const { v4 : uuidv4 } = require('uuid');
+const { isLoggedIn } = require("./middleware.js");
 
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"views"));
@@ -70,17 +72,43 @@ app.use((req,res,next)=>{
 });
 
 // gemini api setup :
-let  { GoogleGenAI } = require("@google/genai");
+let  { GoogleGenAI , createPartFromUri} = require("@google/genai");
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
 
-async function geminiAI(input_text,num_questions) {
-    const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: `
-                        You are an AI assistant helping the user generate multiple-choice questions (MCQs) based on the following text:
-                        '${input_text}'
-                        Please generate ${num_questions} MCQs from the text. Each question should have:
+async function gemminiAI(fileElement, questCount , difficulty) {
+    
+    const pdfBuffer = await fetch(fileElement.path)
+        .then((response) => response.arrayBuffer());
+
+    const fileBlob = new Blob([pdfBuffer], { type: 'application/pdf' });
+
+    const file = await ai.files.upload({
+        file: fileBlob,
+        config: {
+            displayName: 'A17_FlightPlan.pdf',
+        },
+    });
+
+    // Wait for the file to be processed.
+    let getFile = await ai.files.get({ name: file.name });
+    while (getFile.state === 'PROCESSING') {
+        getFile = await ai.files.get({ name: file.name });
+        console.log(`current file status: ${getFile.state}`);
+        console.log('File is still processing, retrying in 5 seconds');
+
+        await new Promise((resolve) => {
+            setTimeout(resolve, 5000);
+        });
+    }
+    if (file.state === 'FAILED') {
+        throw new Error('File processing failed.');
+    }
+
+    // Add the file to the contents.
+    const content = [
+        ` You are an AI assistant helping the user generate multiple-choice questions (MCQs) based on the text in the provided document:
+                        Please generate ${questCount} MCQs of ${difficulty} difficulty level of MCQs from the text. Each question should have:
                         - A clear question
                         - Four answer options (labeled A, B, C, D)
                         - The correct answer clearly indicated
@@ -99,12 +127,21 @@ async function geminiAI(input_text,num_questions) {
                         },
                         ...
                         ]
-                        NOTE: "Return without any code block or explanation."
+                        NOTE: "Return without any code block or explanation." `
+    ];
 
-                 
-                `,
+    if (file.uri && file.mimeType) {
+        const fileContent = createPartFromUri(file.uri, file.mimeType);
+        content.push(fileContent);
+    }
+
+    const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: content,
     });
-    return response.text
+
+    return(response.text);
+
 }
 
 
@@ -116,35 +153,63 @@ app.get('/home', (req, res) => {
 });
 
 
-app.post('/generate', upload.single('file'), wrapAsync(async (req, res) => {
+app.post('/home/generate', isLoggedIn, upload.single('file'), wrapAsync(async (req, res) => {
     if (!req.file) {
-        return res.send("No file uploaded.");
+        req.flash("error", "No file uploaded.");
+        return res.redirect("/home");
     }
 
-    // const filePath = path.join(__dirname, req.file.path);
-    console.log(req.file.path);
+    // this will never work b/c error caught during uploadin of document due to configuration:
+    const allowedExtensions = ['pdf', 'doc', 'docx', 'txt'];
+    const fileName = req.file.originalname;
+    const extension = fileName.split('.').pop().toLowerCase();
 
-    res.redirect("/home");
+    if (!allowedExtensions.includes(extension)) {
+      req.flash("error", "Invalid file format. Only PDF, DOC, DOCX, or TXT files are allowed.");
+      return res.redirect("/home");
+    }
+
+    let {questionCount , difficulty} = req.body; 
+    console.log(req.file);
+
+    let user = await User.findById(req.user._id);
+    let fileId = uuidv4();
+    user.fileUrl.push({path:req.file.path, fileId: fileId});
+    let updatedUser = await user.save();
+
+    console.log(updatedUser);
+
+    for (let element of updatedUser.fileUrl) {
+        if(element.fileId == fileId){
+            let mcqs= await gemminiAI(element,questionCount, difficulty);
+            mcqs = JSON.parse(mcqs);
+            console.log(mcqs);
+            return res.render("demo.ejs" ,{mcqs});
+        }
+    }
+    req.flash("error", "File upload failed. Please try again.");
+    return res.redirect("/home");
+
 }));
+
+
 
 app.use('/', require('./routes/user/user.js'));
-
-
 // demo : 
-app.get("/demo" ,(req,res)=>{
-    res.render("demo.ejs");
-});
+// app.get("/demo" ,(req,res)=>{
+//     res.render("demo.ejs");
+// });
 
-app.post("/results",wrapAsync(async (req,res)=>{
-        let response = req.body.query;
+// app.post("/results",wrapAsync(async (req,res)=>{
+//         let response = req.body.query;
 
 
-        let data = await geminiAI(response,1);
-        const mcqs = JSON.parse(data);
-        console.log(mcqs);
-        res.render("demo.ejs",{mcqs});
+//         let data = await geminiAI(response,1);
+//         const mcqs = JSON.parse(data);
+//         console.log(mcqs);
+//         res.render("demo.ejs",{mcqs});
 
-}));
+// }));
 
 
 

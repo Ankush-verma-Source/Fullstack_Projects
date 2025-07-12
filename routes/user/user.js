@@ -26,7 +26,7 @@ router.post("/signup" ,wrapAsync(async(req,res)=>{
             }
 
             req.flash("success","login successfully");
-            res.redirect("/home");
+            res.redirect(`/home`);
             
         });
     }catch(err){

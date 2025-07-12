@@ -56,7 +56,7 @@
           <i class="fas fa-file-upload"></i>
           Upload your document to generate MCQs
         </div>
-
+      <form action="/home/generate" method="post" id="generate-form" enctype="multipart/form-data">
         <div
           id="drop-area"
           class="drop-area"
@@ -68,11 +68,13 @@
           <p id="drop-text">Drag & drop your file here or click to browse</p>
           <div id="file-details" class="file-info hidden"></div>
         </div>
+  
         <input
           type="file"
           id="file-upload"
+          name="file"
           class="hidden"
-          accept=".txt,.pdf,.doc,.docx,.md"
+          accept=".txt,.pdf,.doc,.docx"
           onchange="handleFileSelect()"
         />
 
@@ -81,7 +83,7 @@
           <input
             type="number"
             id="question-count"
-            name="question-count"
+            name="questionCount"
             min="1"
             max="50"
             value="5"
@@ -98,20 +100,21 @@
         </div>
         <div class="btnn-group">
           <button
-            type="button"
+            type="reset"
             class="btnn btnn-secondary"
             onclick="resetForm()"
           >
             Reset
           </button>
           <button
-            type="button"
+            type="submit"
             class="btnn btnn-primary"
             id="generate-btn"
             onclick="generateMCQs()"
           >
             Generate MCQs
           </button>
+          </form>
         </div>
       </div>
     </div>

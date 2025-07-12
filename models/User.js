@@ -11,6 +11,13 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    fileUrl:[
+        {
+            path : String,
+            fileId : String,
+            _id : false,
+        }
+    ],
 }, {
     timestamps: true  // automatically create createdAt and updatedAt
 });

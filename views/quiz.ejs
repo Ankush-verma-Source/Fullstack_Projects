@@ -1,0 +1,400 @@
+<% layout('layouts/boilerplate') %>
+
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f9f9fc;
+  }
+
+  .quiz-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    position: relative;
+  }
+
+  .quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .quiz-header h2 {
+    font-size: 1.6rem;
+    color: #333;
+  }
+
+  .quiz-status {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #2b6cb0;
+  }
+
+  .quiz-card {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    display: none;
+  }
+
+  .quiz-card.active {
+    display: block;
+  }
+
+  .quiz-card h4 {
+    font-size: 1.1rem;
+    color: #333;
+  }
+
+  .quiz-type {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+
+  .quiz-card ul {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .quiz-card li {
+    background-color: #f2f6ff;
+    padding: 10px 15px;
+    margin: 8px 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .quiz-card li.correct {
+    background-color: #d4edda !important;
+    color: #155724;
+    font-weight: bold;
+  }
+
+  .quiz-card li.incorrect {
+    background-color: #f8d7da !important;
+    color: #721c24;
+    font-weight: bold;
+  }
+
+  .quiz-card li.disabled {
+    pointer-events: none;
+    opacity: 0.7;
+  }
+
+  .correct-answer {
+    display: none;
+    margin-top: 10px;
+    font-weight: bold;
+    color: #2b6cb0;
+  }
+
+  .toggle-btn {
+    background: none;
+    border: none;
+    color: #0077cc;
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 0.9rem;
+  }
+
+  .nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+
+  .nav-buttons button {
+    background-color: #2b6cb0;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  .quiz-result {
+    display: none;
+    text-align: center;
+    margin-top: 30px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #155724;
+  }
+
+  .timer {
+    font-size: 1rem;
+    color: #d63333;
+    font-weight: bold;
+  }
+</style>
+
+<div class="quiz-container">
+  <div class="quiz-header">
+    <h2>Quiz In Progress</h2>
+    <div class="quiz-status">
+      <span id="score-display">Score: 0</span> |
+      <span class="timer">⏱ Time Left: <span id="timer">05:00</span></span>
+    </div>
+  </div>
+
+  <% if (quiz && quiz.length > 0) { %>
+    <% quiz.forEach(function(q, idx) { %>
+      <div class="quiz-card" id="card-<%= idx %>">
+        <div class="quiz-type">Q<%= idx + 1 %> — <%= q.type.replace('-', ' ').toUpperCase() %></div>
+        <h4><%= q.question %></h4>
+
+        <button class="toggle-btn" onclick="toggleMarked('<%= idx %>' , this)">🔖 Mark for Later</button>
+
+        <% if (q.type === 'multiple-choice' && q.options) { %>
+          <ul>
+            <% q.options.forEach(function(opt, i) {
+              const letter = String.fromCharCode(65 + i); %>
+              <li onclick="selectOption(this, '<%= letter %>', '<%= q.correct %>', '<%= idx %>')">
+                <strong><%= letter %>.</strong> <%= opt %>
+              </li>
+            <% }); %>
+          </ul>
+
+        <% } else if (q.type === 'true-false') { %>
+          <ul>
+            <li onclick="selectOption(this, 'True', '<%= q.correct %>', '<%= idx %>')"><strong>A.</strong> True</li>
+            <li onclick="selectOption(this, 'False', '<%= q.correct %>', '<%= idx %>')"><strong>B.</strong> False</li>
+          </ul>
+
+        <% } else if (q.type === 'short-answer') { %>
+          <p><em>Short Answer:</em></p>
+          <div style="margin: 8px 0;">
+            <label>
+              <input type="checkbox" onchange="handleShortAnswerCheck(this, '<%= idx %>')" />
+              I know the correct answer
+            </label>
+          </div>
+          <button class="toggle-btn" onclick="toggleShortAnswer(this)">Show Answer</button>
+          <div class="correct-answer">✅ Correct Answer: <strong><%= q.correct %></strong></div>
+        <% } %>
+      </div>
+    <% }); %>
+
+    <div class="nav-buttons">
+      <button onclick="prevQuestion()">⬅ Previous</button>
+  <button id="next-btn" onclick="nextQuestion()">Next ➡</button>
+
+
+    </div>
+
+    <div class="quiz-result" id="result-box"></div>
+    <div id="review-section" style="display: none; text-align: center; margin-top: 20px;">
+      <button class="toggle-btn" onclick="startReviewMode()">🔁 Review Unanswered Questions</button>
+    </div>
+  <% } else { %>
+    <p>No quiz data available.</p>
+  <% } %>
+</div>
+
+<script>
+  let current = 0;
+  let score = 0;
+  const total = '<%= quiz.length %>';
+  let answered = Array(total).fill(false);
+  let markedForLater = [];
+
+  function showCard(index) {
+    document.querySelectorAll('.quiz-card').forEach((card, i) => {
+      card.classList.toggle('active', i === index);
+    });
+  }
+
+  function nextQuestion() {
+    if (current < total - 1) {
+      current++;
+      showCard(current);
+      updateNextButton();
+    } else {
+      if (answered.includes(false)) {
+      startReviewMode(); // Go into review if not complete
+    } else {
+      endQuiz(); // End quiz if all answered
+    }
+  }
+}
+
+  function prevQuestion() {
+    if (current > 0) {
+      current--;
+      showCard(current);
+    }
+  }
+
+  function selectOption(el, chosen, correct, idx) {
+    if (answered[idx]) return;
+    
+
+    const list = el.parentElement.querySelectorAll('li');
+    list.forEach(li => li.classList.add('disabled'));
+
+    if (chosen === correct) {
+      el.classList.add('correct');
+      score++;
+    } else {
+      el.classList.add('incorrect');
+      list.forEach(li => {
+        if (li.innerText.includes(correct)) li.classList.add('correct');
+      });
+    }
+
+    document.getElementById("score-display").innerText = `Score: ${score}`;
+    answered[idx] = true;
+
+    const answerBox = el.parentElement.parentElement.querySelector('.correct-answer');
+    if (answerBox) answerBox.style.display = 'block';
+
+    if (document.getElementById("result-box").innerText.includes("Review Mode")) {
+      fetch("/quiz/fixed", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          questionIndex: idx,
+          fixed: true,
+          timestamp: new Date().toISOString()
+        })
+      });
+    }
+
+
+updateNextButton();
+
+
+  }
+  
+
+  function handleShortAnswerCheck(checkbox, idx) {
+    if (answered[idx]) {
+      checkbox.disabled = true;
+      return;
+    }
+
+    if (checkbox.checked) {
+      score++;
+      answered[idx] = true;
+      document.getElementById("score-display").innerText = `Score: ${score}`;
+      checkbox.disabled = true;
+
+      const questionText = document.querySelector(`#card-${idx} h4`).innerText;
+      fetch("/quiz/track", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          questionIndex: idx,
+          question: questionText,
+          type: "short-answer",
+          known: true,
+          timestamp: new Date().toISOString()
+        })
+      });
+    }
+
+    updateNextButton();
+
+
+  }
+
+  function toggleShortAnswer(btn) {
+    const box = btn.nextElementSibling;
+    const visible = box.style.display === 'block';
+    box.style.display = visible ? 'none' : 'block';
+    btn.innerText = visible ? 'Show Answer' : 'Hide Answer';
+  }
+
+  function endQuiz() {
+  clearInterval(timer);
+    document.querySelectorAll('.quiz-card').forEach(card => card.style.display = 'none');
+    document.querySelector('.nav-buttons').style.display = 'none';
+    document.getElementById("result-box").style.display = 'block';
+    document.getElementById("result-box").innerText = `✅ You scored ${score} out of ${total}`;
+    
+      if (!answered.includes(false)) {
+    document.getElementById("review-section").style.display = "none"; // ✅ Add this line here
+  } else {
+    document.getElementById("review-section").style.display = "block";
+  }
+
+  }
+
+  function startReviewMode() {
+    document.getElementById("review-section").style.display = "none";
+    document.getElementById("result-box").innerText = "📝 Review Mode: Unanswered Questions";
+    document.querySelector('.nav-buttons').style.display = 'flex';
+
+    document.querySelectorAll('.quiz-card').forEach((card, i) => {
+      if (!answered[i]) {
+        card.style.display = 'block';
+        card.classList.add('active');
+        current = i;
+        answered[i] = false;
+
+        card.querySelectorAll('li').forEach(li => li.classList.remove('disabled', 'correct', 'incorrect'));
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  function toggleMarked(idx, btn) {
+    const marked = markedForLater.includes(idx);
+    if (marked) {
+      markedForLater = markedForLater.filter(i => i !== idx);
+      btn.innerText = "🔖 Mark for Later";
+    } else {
+      markedForLater.push(idx);
+      btn.innerText = "✅ Marked";
+    }
+
+    fetch("/quiz/mark", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        questionIndex: idx,
+        marked: !marked,
+        timestamp: new Date().toISOString()
+      })
+    });
+  }
+
+  showCard(current);
+
+  // Timer
+  let time = 300;
+  const timerEl = document.getElementById("timer");
+  const timer = setInterval(() => {
+    if (time <= 0) {
+      clearInterval(timer);
+      endQuiz();
+    } else {
+      const mins = String(Math.floor(time / 60)).padStart(2, '0');
+      const secs = String(time % 60).padStart(2, '0');
+      timerEl.innerText = `${mins}:${secs}`;
+      time--;
+    }
+  }, 1000);
+
+function updateNextButton() {
+  const nextBtn = document.getElementById("next-btn");
+
+  if (current === total - 1) {
+    if (answered.includes(false)) {
+      nextBtn.innerText = "🔁 Review Unanswered";
+    } else {
+      nextBtn.innerText = "✅ Submit Quiz";
+    }
+  } else {
+    nextBtn.innerText = "Next ➡";
+  }
+}
+
+</script>

@@ -1,0 +1,157 @@
+<% layout('layouts/boilerplate') %>
+
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f9f9fc;
+  }
+
+  .mcq-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+  }
+
+  .mcq-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+
+  .mcq-header h2 {
+    font-size: 1.8rem;
+    color: #333;
+  }
+
+  .export-btn {
+    padding: 10px 18px;
+    background-color: #2b6cb0;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+  }
+
+  .export-btn:hover {
+    background-color: #1a4c80;
+  }
+
+  .mcq-card {
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease;
+  }
+
+  .mcq-card:hover {
+    transform: scale(1.01);
+  }
+
+  .mcq-card h4 {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    color: #333;
+  }
+
+  .mcq-card ul {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .mcq-card li {
+    background-color: #f2f6ff;
+    padding: 10px 15px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+  }
+
+  .mcq-card li:hover {
+    background-color: #e0e8ff;
+  }
+
+  .correct-answer {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #2b6cb0;
+  }
+
+  .toggle-btn {
+    background: none;
+    border: none;
+    color: #0077cc;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-top: 10px;
+    padding: 0;
+  }
+
+  .toggle-btn:hover {
+    text-decoration: underline;
+  }
+
+  .pagination-info {
+    margin-bottom: 15px;
+    font-weight: bold;
+    color: #666;
+  }
+</style>
+
+<div class="mcq-container" id="mcq-container">
+  <div class="mcq-header">
+    <h2>Generated MCQs</h2>
+    <button class="export-btn" onclick="exportToPDF()">Export as PDF</button>
+  </div>
+
+  <% if (typeof mcqs !== "undefined" && mcqs.length) { %>
+    <div class="pagination-info">Showing <%= mcqs.length %> questions</div>
+
+    <% mcqs.forEach(function(mcq, idx) { %>
+      <div class="mcq-card">
+        <h4>Q<%= idx + 1 %>: <%= mcq.question %></h4>
+        <ul>
+          <% mcq.options.forEach(function(opt) { %>
+            <li></strong> <%= opt %></li>
+          <% }); %>
+        </ul>
+        <button class="toggle-btn" onclick="toggleAnswer(this)">
+          Show Answer
+        </button>
+        <div class="correct-answer" style="display: none;">
+          ✅ Correct Answer: <strong><%= mcq.correct %></strong>
+        </div>
+      </div>
+    <% }); %>
+  <% } else { %>
+    <p>No MCQs available to display.</p>
+  <% } %>
+</div>
+
+<script>
+  function toggleAnswer(button) {
+    const answerDiv = button.nextElementSibling;
+    const isVisible = answerDiv.style.display === 'block';
+    answerDiv.style.display = isVisible ? 'none' : 'block';
+    button.innerText = isVisible ? 'Show Answer' : 'Hide Answer';
+  }
+
+  function exportToPDF() {
+    const element = document.getElementById('mcq-container');
+    const opt = {
+      margin:       0.5,
+      filename:     'Generated_MCQs.pdf',
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2 },
+      jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+    html2pdf().from(element).set(opt).save();
+  }
+</script>
+
+<!-- Include html2pdf.js library for PDF generation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>

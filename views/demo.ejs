@@ -1,17 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
-    <!-- <div style="text-align: center; margin-top: 300px">
-      <form action="/results" method="POST">
-        <input type="text" placeholder="search" name="query" />
-        <button>click me to generate</button>
-      </form>
-    </div> -->
+<% layout('layouts/boilerplate') %>
 
     <div>
       <% if (typeof mcqs !== "undefined" && mcqs.length) { %>
@@ -22,7 +9,7 @@
           <ul>
             <% mcq.options.forEach(function(opt, i) { const letter =
             String.fromCharCode(65 + i); /* "A", "B", "C", "D" */ %>
-            <li><%= letter %> <%= opt %></li>
+            <li><%= opt %></li>
             <% }); %>
           </ul>
           <div style="color: blue">Correct Answer: <%= mcq.correct %></div>
@@ -32,5 +19,3 @@
       </div>
       <% } %>
     </div>
-  </body>
-</html>

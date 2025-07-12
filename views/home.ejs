@@ -27,12 +27,12 @@
       </div>
       <div class="feature-title">Generate MCQs</div>
     </div>
-    <div class="feature-card" onclick="openTab(event, 'flashcards')">
+    <!-- <div class="feature-card" onclick="openTab(event, 'flashcards')">
       <div class="feature-icon">
         <i class="fas fa-layer-group"></i>
       </div>
       <div class="feature-title">Flashcards</div>
-    </div>
+    </div> -->
     <div class="feature-card" onclick="openTab(event, 'summaries')">
       <div class="feature-icon">
         <i class="fas fa-file-alt"></i>
@@ -56,7 +56,7 @@
           <i class="fas fa-file-upload"></i>
           Upload your document to generate MCQs
         </div>
-      <form action="/home/generate" method="post" id="generate-form" enctype="multipart/form-data">
+      <form action="/user/generate/mcq" method="post" id="generate-form" enctype="multipart/form-data">
         <div
           id="drop-area"
           class="drop-area"
@@ -120,7 +120,7 @@
     </div>
 
     <!-- Flashcards Tab (Hidden by default) -->
-    <div id="flashcards" class="feature-card hidden">
+    <!-- <div id="flashcards" class="feature-card hidden">
       <h2>Create Flashcards</h2>
       <div class="upload-section">
         <div class="upload-prompt">
@@ -148,7 +148,7 @@
           </button>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <!-- Summary Generator Tab (Hidden by default) -->
     <div id="summaries" class="feature-card hidden">
@@ -159,13 +159,32 @@
           Upload your document to generate a summary
         </div>
 
-        <div class="drop-area">
-          <p>Drag & drop your file here or click to browse</p>
+        <form action="/user/generate/summary" method="post" id="generate-form" enctype="multipart/form-data">
+        <div
+          id="drop-area-summary"
+          class="drop-area"
+          onclick="document.getElementById('file-upload-summary').click()"
+          ondragover="event.preventDefault(); this.classList.add('dragover')"
+          ondragleave="this.classList.remove('dragover')"
+          ondrop="handleFileDropSummary(event)"
+        >
+          <p id="drop-text-summary">Drag & drop your file here or click to browse</p>
+          <div id="file-details-summary" class="file-info hidden"></div>
         </div>
+
+          
+        <input
+          type="file"
+          id="file-upload-summary"
+          name="file"
+          class="hidden"
+          accept=".txt,.pdf,.doc,.docx"
+          onchange="handleFileSelectSummary()"
+        />
 
         <div class="form-group">
           <label for="summary-length">Summary Length:</label>
-          <select id="summary-length" name="summary-length">
+          <select id="summary-length" name="summaryLength">
             <option value="short">Short (2-3 paragraphs)</option>
             <option value="medium" selected>Medium (4-5 paragraphs)</option>
             <option value="long">Long (6+ paragraphs)</option>
@@ -173,11 +192,12 @@
         </div>
 
         <div class="btnn-group">
-          <button type="button" class="btnn btnn-secondary">Reset</button>
-          <button type="button" class="btnn btnn-primary">
+          <button type="reset" class="btnn btnn-secondary"  onclick="resetFormSummary()">Reset</button>
+          <button type="submit" class="btnn btnn-primary"onclick="generateSummary()">
             Generate Summary
           </button>
         </div>
+      </form>
       </div>
     </div>
 
@@ -190,13 +210,33 @@
           Upload your document to create a quiz
         </div>
 
-        <div class="drop-area">
-          <p>Drag & drop your file here or click to browse</p>
+         <form action="/user/generate/quiz" method="post" id="generate-form" enctype="multipart/form-data">
+        <div
+          id="drop-area-quiz"
+          class="drop-area"
+          onclick="document.getElementById('file-upload-quiz').click()"
+          ondragover="event.preventDefault(); this.classList.add('dragover')"
+          ondragleave="this.classList.remove('dragover')"
+          ondrop="handleFileDropQuiz(event)"
+        >
+          <p id="drop-text-quiz">Drag & drop your file here or click to browse</p>
+          <div id="file-details-quiz" class="file-info hidden"></div>
         </div>
+
+             
+        <input
+          type="file"
+          id="file-upload-quiz"
+          name="file"
+          class="hidden"
+          accept=".txt,.pdf,.doc,.docx"
+          onchange="handleFileSelectQuiz()"
+        />
+
 
         <div class="form-group">
           <label for="quiz-type">Quiz Type:</label>
-          <select id="quiz-type" name="quiz-type">
+          <select id="quiz-type" name="quizType">
             <option value="multiple-choice">Multiple Choice</option>
             <option value="true-false">True/False</option>
             <option value="short-answer">Short Answer</option>
@@ -205,9 +245,10 @@
         </div>
 
         <div class="btnn-group">
-          <button type="button" class="btnn btnn-secondary">Reset</button>
-          <button type="button" class="btnn btnn-primary">Create Quiz</button>
+          <button type="reset" class="btnn btnn-secondary" onclick="resetFormQuiz()">Reset</button>
+          <button type="submit" class="btnn btnn-primary" onclick="generateQuiz()">Create Quiz</button>
         </div>
+      </form>
       </div>
     </div>
   </div>

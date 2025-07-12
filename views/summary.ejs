@@ -1,0 +1,112 @@
+<% layout('layouts/boilerplate') %>
+
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f9f9fc;
+  }
+
+  .summary-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+  }
+
+  .summary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+
+  .summary-header h2 {
+    font-size: 1.8rem;
+    color: #333;
+  }
+
+  .summary-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .action-btn {
+    padding: 10px 16px;
+    background-color: #2b6cb0;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+  }
+
+  .action-btn:hover {
+    background-color: #1a4c80;
+  }
+
+  .summary-card {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease;
+    white-space: pre-wrap;
+    line-height: 1.6;
+    font-size: 1rem;
+    color: #444;
+  }
+
+  .empty-msg {
+    font-size: 1.1rem;
+    color: #888;
+    text-align: center;
+    margin-top: 60px;
+  }
+</style>
+
+<div class="summary-container" id="summary-container">
+  <div class="summary-header">
+    <h2>Generated Summary</h2>
+    <div class="summary-actions">
+      <button class="action-btn" onclick="copySummary()">Copy</button>
+      <button class="action-btn" onclick="exportToPDF()">Export as PDF</button>
+    </div>
+  </div>
+
+  <% if (typeof summary !== "undefined" && summary.trim().length > 0) { %>
+    <div class="summary-card" id="summary-text">
+      <%= summary %>
+    </div>
+  <% } else { %>
+    <div class="empty-msg">
+      No summary available to display.
+    </div>
+  <% } %>
+</div>
+
+<!-- Script -->
+<script>
+  function copySummary() {
+    const text = document.getElementById("summary-text").innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      alert("Summary copied to clipboard!");
+    }).catch((err) => {
+      alert("Failed to copy summary.");
+    });
+  }
+
+  function exportToPDF() {
+    const element = document.getElementById('summary-container');
+    const opt = {
+      margin:       0.5,
+      filename:     'Generated_Summary.pdf',
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2 },
+      jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+    html2pdf().from(element).set(opt).save();
+  }
+</script>
+
+<!-- Include html2pdf.js library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>

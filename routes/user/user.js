@@ -8,7 +8,7 @@ const User = require("../../models/User.js");
 
 
 router.get("/signup" ,(req,res)=>{
-    res.render("/users/signup.ejs", { title: 'SignUp | Questiva ' });
+    res.render("users/signup.ejs", { title: 'SignUp | Questiva ' });
 });
 router.post("/signup" ,wrapAsync(async(req,res)=>{
     try {
@@ -39,7 +39,7 @@ router.post("/signup" ,wrapAsync(async(req,res)=>{
 }));
 
 router.get("/login" ,(req,res)=>{
-    res.render("/users/login.ejs", { title: 'Login | Questiva' });
+    res.render("users/login.ejs", { title: 'Login | Questiva' });
 });
 
 router.post("/login" ,passport.authenticate("local",{failureRedirect:"/login",failureFlash : true}) ,wrapAsync(async (req,res)=>{

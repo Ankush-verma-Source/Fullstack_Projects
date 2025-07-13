@@ -50,7 +50,7 @@ router.post(
         let mcqs = await generateMCQs(element, questionCount, difficulty);
         mcqs = JSON.parse(mcqs);
         console.log(mcqs);
-        return res.render("/generate/mcq.ejs" ,{mcqs});
+        return res.render("generate/mcq.ejs" ,{mcqs});
       }
     }
     req.flash("error", "File upload failed. Please try again.");
@@ -83,7 +83,7 @@ router.post(
         let generatedSummary = await generateSummary(element, summaryLength);
         // summary = JSON.parse(summary);
         console.log(generatedSummary);
-        return res.render("/generate/summary.ejs", { summary: generatedSummary });
+        return res.render("generate/summary.ejs", { summary: generatedSummary });
       }
     }
     req.flash("error", "File upload failed. Please try again.");

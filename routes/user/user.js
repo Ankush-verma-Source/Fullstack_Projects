@@ -64,9 +64,4 @@ router.get("/logout" , (req,res)=>{
 });
 
 
-router.get("/:userId/dashboard" , /*islogin*/ (req,res)=>{
-    res.render("dashboard.ejs" , { title: 'Dashboard' });
-});
-
-
 module.exports = router;

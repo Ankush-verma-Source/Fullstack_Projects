@@ -18,17 +18,12 @@ const userSchema = new mongoose.Schema({
             _id : false,
         }
     ],
-quizInteractions: [{
-  questionIndex: { type: Number },
-  question: { type: String },
-  type: { type: String },
-  known: { type: Boolean },
-  marked: { type: Boolean },
-  markTimestamp: { type: Date },
-  fixed: { type: Boolean },
-  fixedTimestamp: { type: Date },
-  timestamp: { type: Date }
-}]
+    generatedContent: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "GeneratedContent"
+    }
+  ]
 
 }, {
     timestamps: true  // automatically create createdAt and updatedAt

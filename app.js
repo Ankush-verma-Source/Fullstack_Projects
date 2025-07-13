@@ -14,7 +14,9 @@ const LocalStrategy = require("passport-local").Strategy;
 const User = require("./models/User.js");
 const ejsMate = require("ejs-mate");
 const ExpressError = require("./util/expressError.js");
-
+const { isLoggedIn } = require("./middleware.js");
+const GeneratedContent = require("./models/content.js");
+const wrapAsync = require("./util/wrapAsync.js");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -77,8 +79,50 @@ app.get("/home", (req, res) => {
   res.render("home.ejs", { title: "Questiva AI Learning Platform" });
 });
 
+app.get("/dashboard" , isLoggedIn, wrapAsync(async (req,res)=>{
+    const contents = await GeneratedContent.find({ user: req.user._id }).sort({ createdAt: -1 });
+    res.render("dashboard.ejs" , { title: 'Dashboard' , contents});
+}));
 
-app.use("/quiz", require("./routes/features/quiz.js"));
+app.get("/dashboard/view/:id", isLoggedIn, wrapAsync(async (req, res) => {
+  const content = await GeneratedContent.findById(req.params.id);
+
+  if (!content || !content.user.equals(req.user._id)) {
+    req.flash("error", "Access denied or content not found.");
+    return res.redirect("/dashboard");
+  }
+
+  if (content.type === "summary") {
+      res.render(`generate/${content.type}`, { summary:content.data });
+  }else if (content.type === "mcq") {
+    res.render(`generate/${content.type}`, { mcqs : content.data });
+  } else if (content.type === "quiz") {
+    res.render(`generate/${content.type}`, { quiz: content.data });
+  } else {
+    req.flash("error", "Invalid content type.");
+    return res.redirect("/home");
+  }
+
+}));
+
+app.get("/dashboard/filter", isLoggedIn, wrapAsync(async (req, res) => {
+  const { type, date } = req.query;
+  let query = { user: req.user._id /*deleted: { $ne: true }*/ };
+
+  if (type) query.type = type;
+  // if (date) {
+  //   const [year, month] = date.split("-"); // e.g., 2025-07
+  //   const start = new Date(year, month - 1);
+  //   const end = new Date(year, month);
+  //   query.createdAt = { $gte: start, $lt: end };
+  // }
+
+  const contents = await GeneratedContent.find(query).sort({ createdAt: -1 });
+  res.render("dashboard", { contents });
+}));
+
+
+
 
 app.use("/user/generate", require("./routes/features/feature.js"));
 

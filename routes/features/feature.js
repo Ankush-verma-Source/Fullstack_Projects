@@ -9,7 +9,7 @@ const multer = require("multer");
 const { storage } = require("../../cloudinaryConfig.js");
 const upload = multer({ storage });
 const { v4: uuidv4 } = require("uuid");
-
+const GeneratedContent = require("../../models/content.js");
 
 
 router.post(
@@ -50,6 +50,18 @@ router.post(
         let mcqs = await generateMCQs(element, questionCount, difficulty);
         mcqs = JSON.parse(mcqs);
         console.log(mcqs);
+
+        let content = await GeneratedContent.create({
+          user: req.user._id,
+          type: "mcq",
+          fileId: fileId,
+          meta: {
+            questionCount,
+            difficulty
+          },
+            data: mcqs
+          });
+        console.log(content);
         return res.render("generate/mcq.ejs" ,{mcqs});
       }
     }
@@ -81,8 +93,19 @@ router.post(
     for (let element of updatedUser.fileUrl) {
       if (element.fileId == fileId) {
         let generatedSummary = await generateSummary(element, summaryLength);
-        // summary = JSON.parse(summary);
         console.log(generatedSummary);
+
+        await GeneratedContent.create({
+          user: req.user._id,
+          type: "summary",
+          fileId: fileId,
+          meta: {
+            summaryLength
+          },
+          data: generatedSummary
+        });
+
+
         return res.render("generate/summary.ejs", { summary: generatedSummary });
       }
     }
@@ -90,6 +113,7 @@ router.post(
     return res.redirect("/home");
   })
 );
+
 
 // generate quiz:
 router.post(
@@ -114,12 +138,6 @@ router.post(
     for (let element of updatedUser.fileUrl) {
       if (element.fileId == fileId) {
         let generatedQuiz = await generateQuiz(element, quizType);
-        // generatedQuiz = JSON.parse(generatedQuiz);
-        console.log(generatedQuiz);
-
-        // console.log("typeof quiz:", typeof generatedQuiz);
-        // console.log("isArray:", Array.isArray(generatedQuiz));
-        // console.log("quiz value:", generatedQuiz);
 
         if (typeof generatedQuiz === "string") {
           try {
@@ -133,8 +151,8 @@ router.post(
                 .replace(/```$/, "")
                 .trim();
             }
-
             generatedQuiz = JSON.parse(generatedQuiz);
+            console.log(generatedQuiz);
           } catch (err) {
             console.error("Failed to parse quiz JSON", err);
             req.flash("error", "Invalid quiz format received.");
@@ -142,7 +160,17 @@ router.post(
           }
         }
 
-        return res.render("generate/quiz.ejs", { quiz: generatedQuiz });
+        await GeneratedContent.create({
+          user: req.user._id,
+          type: "quiz",
+          fileId: fileId,
+          meta: {
+            quizType
+          },
+          data: generatedQuiz
+        });
+
+        return res.render("quiz.ejs", { quiz : generatedQuiz });
       }
     }
     req.flash("error", "File upload failed. Please try again.");

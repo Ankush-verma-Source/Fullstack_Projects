@@ -1,0 +1,172 @@
+<% layout('layouts/boilerplate') %>
+
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    /* background: linear-gradient(to right, #e8f0ff, #f9f9fc); */
+  }
+
+  .quiz-container {
+    max-width: 850px;
+    margin: auto;
+    padding: 20px;
+  }
+  .quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .quiz-header h2 {
+    font-size: 1.6rem;
+    color: #333;
+  }
+
+  .quiz-card {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+    margin-bottom: 30px;
+    transition: transform 0.2s ease;
+  }
+
+  .quiz-card:hover {
+    transform: scale(1.01);
+  }
+
+  .quiz-type {
+    font-size: 0.95rem;
+    color: #555;
+    font-weight: bold;
+    margin-bottom: 6px;
+  }
+
+  .quiz-card h4 {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    color: #222;
+  }
+
+  ul.options {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  ul.options li {
+    background-color: #f0f4ff;
+    padding: 12px 18px;
+    border-radius: 10px;
+    margin: 10px 0;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-weight: 500;
+  }
+
+  ul.options li:hover {
+    background-color: #d9e7ff;
+  }
+
+  li.correct {
+    background-color: #d4edda !important;
+    color: #155724;
+    font-weight: bold;
+  }
+
+  li.incorrect {
+    background-color: #f8d7da !important;
+    color: #721c24;
+    font-weight: bold;
+  }
+
+  li.disabled {
+    pointer-events: none;
+    opacity: 0.8;
+  }
+
+  .short-answer-block {
+    margin-top: 12px;
+  }
+
+  .correct-answer {
+    display: none;
+    margin-top: 12px;
+    font-weight: bold;
+    color: #2b6cb0;
+  }
+
+  .toggle-btn {
+    background-color: transparent;
+    border: 1px solid #0077cc;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    color: #0077cc;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+
+</style>
+
+<div class="quiz-container">
+  <div class="quiz-header">
+    <h2>Quiz</h2>
+  </div>
+  <% if (quiz && quiz.length > 0) { %>
+    <% quiz.forEach(function(q, idx) { %>
+      <div class="quiz-card">
+        <div class="quiz-type">Q<%= idx + 1 %> — <%= q.type.replace('-', ' ').toUpperCase() %></div>
+        <h4><%= q.question %></h4>
+
+        <% if (q.type === 'multiple-choice' && q.options) { %>
+          <ul class="options" id="mcq-<%= idx %>">
+            <% q.options.forEach(function(opt, i) {
+              const letter = String.fromCharCode(65 + i); %>
+              <li onclick="handleMCQClick(this, '<%= letter %>', '<%= q.correct %>', '<%= idx %>')">
+                <strong><%= letter %>.</strong> <%= opt.slice(3) %>
+              </li>
+            <% }); %>
+          </ul>
+
+        <% } else if (q.type === 'true-false') { %>
+          <ul class="options" id="tf-<%= idx %>">
+            <li onclick="handleMCQClick(this, 'True', '<%= q.correct %>', '<%= idx %>')"><strong>A.</strong> True</li>
+            <li onclick="handleMCQClick(this, 'False', '<%= q.correct %>', '<%= idx %>')"><strong>B.</strong> False</li>
+          </ul>
+
+        <% } else if (q.type === 'short-answer') { %>
+          <div class="short-answer-block">
+            <input type="text" placeholder="Write your answer..." style="padding: 10px; width: 100%; border-radius: 8px; border: 1px solid #ccc;">
+            <button class="toggle-btn" onclick="toggleShortAnswer(<%= idx %>)">Show Answer</button>
+            <div class="correct-answer" id="short-<%= idx %>">✅ Correct Answer: <strong><%= q.correct %></strong></div>
+          </div>
+        <% } %>
+      </div>
+    <% }); %>
+  <% } else { %>
+    <p>No quiz data available.</p>
+  <% } %>
+</div>
+
+<script>
+  function handleMCQClick(el, chosen, correct, idx) {
+    const list = el.parentElement.querySelectorAll('li');
+    list.forEach(li => li.classList.add('disabled'));
+
+    if (chosen === correct) {
+      el.classList.add('correct');
+    } else {
+      el.classList.add('incorrect');
+      // Show correct option
+      list.forEach(li => {
+        if (li.innerText.includes(correct + '.')) li.classList.add('correct');
+      });
+    }
+  }
+
+  function toggleShortAnswer(idx) {
+    const el = document.getElementById(`short-${idx}`);
+    el.style.display = el.style.display === "block" ? "none" : "block";
+  }
+</script>

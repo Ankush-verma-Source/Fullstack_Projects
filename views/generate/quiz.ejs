@@ -156,7 +156,7 @@
             <% q.options.forEach(function(opt, i) {
               const letter = String.fromCharCode(65 + i); %>
               <li onclick="selectOption(this, '<%= letter %>', '<%= q.correct %>', '<%= idx %>')">
-                <strong><%= letter %>.</strong> <%= opt %>
+                 <%= opt %>
               </li>
             <% }); %>
           </ul>

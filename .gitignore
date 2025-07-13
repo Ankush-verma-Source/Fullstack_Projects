@@ -1,8 +1,4 @@
 node_modules/
 package-lock.json
 .env
-uploads/
 dfs.html
-views/index.ejs
-views/demo.ejs
-./public/js/script.js

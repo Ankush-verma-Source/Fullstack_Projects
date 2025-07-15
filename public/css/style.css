@@ -25,7 +25,8 @@
       /* Navigation Bar */
       .navbar {
         width:100%;
-        background: linear-gradient(135deg, #667eea, #764ba2);
+        /* background: linear-gradient(135deg, #667eea, #764ba2); */
+        background: linear-gradient(135deg, #6a6ce9, #845ce2);
         padding: 1rem 5%;
         display: flex;
         justify-content: space-between;

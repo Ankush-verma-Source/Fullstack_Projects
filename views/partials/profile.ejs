@@ -1,0 +1,50 @@
+<!-- Font Awesome 6 (Modern Icon Set) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+
+<div class="container mt-5 d-flex justify-content-center">
+  <div class="card shadow-lg p-4" style="width: 100%; max-width: 550px; border-radius: 16px; background-color: #ffffffee;">
+    <div class="card-body">
+      <h3 class="card-title mb-4 text-center text-primary">
+        <i class="fas fa-user-circle me-2"></i>Your Profile
+      </h3>
+
+      <% if (success && success.length > 0) { %>
+        <div class="alert alert-success text-center shadow-sm"><%= success %></div>
+      <% } %>
+
+      <form method="POST" action="/dashboard/profile">
+        <div class="mb-3">
+          <label class="form-label fw-semibold">
+            <i class="fas fa-user me-1 text-muted"></i>Username
+          </label>
+          <input
+            type="text"
+            name="username"
+            class="form-control rounded-pill px-4"
+            value="<%= user.username %>"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">
+            <i class="fas fa-envelope me-1 text-muted"></i>Email
+          </label>
+          <input
+            type="email"
+            name="email"
+            class="form-control rounded-pill px-4"
+            value="<%= user.email %>"
+            required
+          />
+        </div>
+
+        <div class="d-grid gap-2 mt-4">
+          <button type="submit" class="btn btn-primary rounded-pill fw-bold">
+            <i class="fas fa-floppy-disk me-2"></i>Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

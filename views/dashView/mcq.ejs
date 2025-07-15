@@ -1,0 +1,23 @@
+<% layout('layouts/boilerplate') %>
+<div class="container my-5">
+  <h2 class="mb-4">MCQs View</h2>
+
+  <% if (mcqs && mcqs.length > 0) { %>
+    <% mcqs.forEach((mcq, index) => { %>
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Q<%= index + 1 %>.&nbsp; <%= mcq.question %></h5>
+          <ul>
+            <% mcq.options.forEach((opt, i) => {
+              const letter = String.fromCharCode(65 + i);
+            %>
+              <li style="list-style:none"><strong><%= letter %>.</strong> <%= opt.slice(3) %> <% if (letter === mcq.correct) { %> ✅ <% } %></li>
+            <% }) %>
+          </ul>
+        </div>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <p>No MCQs found.</p>
+  <% } %>
+</div>

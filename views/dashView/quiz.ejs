@@ -1,0 +1,31 @@
+<% layout('layouts/boilerplate') %>
+<div class="container my-5">
+  <h2 class="mb-4">Quiz View</h2>
+
+  <% if (quiz && quiz.length > 0) { %>
+    <% quiz.forEach((q, index) => { %>
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title" style="font-size:1.2rem"><%= q.type.replace('-', ' ').toUpperCase() %></h5>
+          <p class="card-text"><b>Q<%= index + 1 %>.</b>&nbsp;&nbsp;<%= q.question %></p>
+
+          <% if (q.type === 'multiple-choice') { %>
+            <ul>
+              <% q.options.forEach((opt, i) => { 
+                const letter = String.fromCharCode(65 + i); 
+              %>
+                <li style="list-style:none"><strong><%= letter %>.</strong> <%= opt.slice(3) %> <% if (letter === q.correct) { %> ✅ <% } %></li>
+              <% }) %>
+            </ul>
+          <% } else if (q.type === 'true-false') { %>
+            <p><strong>Answer:</strong> <%= q.correct %></p>
+          <% } else if (q.type === 'short-answer') { %>
+            <p><strong>Answer:</strong> <%= q.correct %></p>
+          <% } %>
+        </div>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <p>No quiz data found.</p>
+  <% } %>
+</div>

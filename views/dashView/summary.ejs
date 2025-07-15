@@ -1,0 +1,14 @@
+<% layout('layouts/boilerplate') %>
+<div class="container my-5">
+  <h2 class="mb-4">Summary View</h2>
+
+  <% if (summary) { %>
+    <div class="card">
+      <div class="card-body">
+        <pre style="white-space: pre-wrap; font-size: 1.1rem;"><%= summary %></pre>
+      </div>
+    </div>
+  <% } else { %>
+    <p>No summary data available.</p>
+  <% } %>
+</div>
